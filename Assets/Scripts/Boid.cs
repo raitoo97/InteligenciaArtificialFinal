@@ -7,19 +7,19 @@ public class Boid : Agent , IFlockingSeparation
     [SerializeField]public List<Boid> _neigboards = new List<Boid>();
     public float weightSeparation;
     [Range(0f, 2f)]public float radiusSeparation;
-    public Leader leader;
+    [SerializeField]private Leader _leaderRef;
     private void OnEnable()
     {
         _fsm = new FSM();
+        _fsm.AddState(FSM.State.Move, new MoveBoidState(_leaderRef, this, this));
     }
     protected override void Start()
     {
         base.Start();
-        _fsm.ChangeState(FSM.State.Idle);
+        _fsm.ChangeState(FSM.State.Move);
     }
     protected override void Update()
     {
-        FlockingAndArrive();
         _fsm?.OnUpdate();
         base.Update();
     }
@@ -40,9 +40,8 @@ public class Boid : Agent , IFlockingSeparation
         steering = Vector3.ClampMagnitude(steering, _maxForce);
         return steering;
     }
-    public void FlockingAndArrive()
+    public void ApplySeparation()
     {
-        ApplyArrive(leader.transform.position);
         AddForce(Separation(_neigboards, radiusSeparation) * weightSeparation);
     }
     private void OnDrawGizmos()
