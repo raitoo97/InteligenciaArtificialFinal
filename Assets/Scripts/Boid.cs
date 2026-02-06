@@ -1,11 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class Boid : Agent , IFlockingSeparation
 {
     private FSM _fsm;
     [Header("BoidConfig")]
-    [SerializeField][Range(0,3)]private float _nearDistance;
+    [SerializeField]private List<Boid> _neigboards = new List<Boid>();
     private void OnEnable()
     {
         _fsm = new FSM();
