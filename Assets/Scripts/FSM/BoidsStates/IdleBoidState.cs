@@ -19,7 +19,6 @@ public class IdleBoidState : IState
         _isStopped = false;
         CheckHasNeighbors();
     }
-
     public void OnUpdate()
     {
         var distance = Vector3.Distance(_boid.transform.position, _leader.transform.position);
