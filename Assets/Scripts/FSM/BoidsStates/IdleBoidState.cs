@@ -29,17 +29,19 @@ public class IdleBoidState : IState
             return;
         }
         CheckHasNeighbors();
-        if (_hasNeighbors && _isStopped)
+        bool leaderTooClose = HasLeaderTooClose();
+        bool shouldMove = _hasNeighbors || leaderTooClose;
+        if (shouldMove && _isStopped)
         {
             _agent.ChangeMove(true);
             _isStopped = false;
         }
-        else if (!_hasNeighbors && !_isStopped)
+        else if (!shouldMove && !_isStopped)
         {
             _agent.ChangeMove(false);
             _isStopped = true;
         }
-        if (_hasNeighbors)
+        if (shouldMove)
         {
             _boid.ApplySeparation();
         }
@@ -61,5 +63,11 @@ public class IdleBoidState : IState
                 return;
             }
         }
+    }
+    private bool HasLeaderTooClose()
+    {
+        if (_leader == null) return false;
+        float dist = Vector3.Distance(_boid.transform.position,_leader.transform.position);
+        return dist < _boid.radiusSeparation;
     }
 }
