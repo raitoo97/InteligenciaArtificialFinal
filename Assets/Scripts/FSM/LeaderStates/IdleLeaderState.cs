@@ -22,6 +22,9 @@ public class IdleLeaderState : IState
     public void OnUpdate()
     {
         if(_mainPath.Count > 0)
+        {
             _fsm.ChangeState(FSM.State.Move);
+            return;
+        }
     }
 }

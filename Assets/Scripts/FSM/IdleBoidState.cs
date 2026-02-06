@@ -17,16 +17,36 @@ public class IdleBoidState : IState
     }
     public void OnExit()
     {
+        _agent.ChangeMove(true);
     }
     public void OnUpdate()
     {
-        CheckDistanceToLeader();
-        _boid.ApplySeparation();
-    }
-    public void CheckDistanceToLeader()
-    {
         var distance = Vector3.Distance(_boid.transform.position, _leader.transform.position);
         if (distance > _boid._distanceToLeader)
+        {
             _fsm.ChangeState(FSM.State.Move);
+            return;
+        }
+        bool hasNeighbors = false;
+        foreach (var boid in _boid._neigboards)
+        {
+            if (boid == _boid) continue;
+            float dist = Vector3.Distance(_boid.transform.position, boid.transform.position);
+            if (dist < _boid.radiusSeparation)
+            {
+                hasNeighbors = true;
+                break;
+            }
+        }
+        float distToLeader = Vector3.Distance(_boid.transform.position, _leader.transform.position);
+        bool tooCloseToLeader = distToLeader < _boid.radiusSeparation;
+        if (hasNeighbors || tooCloseToLeader)
+        {
+            _boid.ApplySeparation();
+        }
+        else
+        {
+            _agent.ChangeMove(false);
+        }
     }
 }
