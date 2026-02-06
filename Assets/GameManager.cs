@@ -19,9 +19,14 @@ public class GameManager : MonoBehaviour
     private void ConfigBoids()
     {
         boids = BoidManager.instance.GetBoids;
-        foreach(var boid in boids)
+        var blueBoids = boids.FindAll(b => b.typeBoid == TypeBoid.BlueTeam);
+        var violetBoids = boids.FindAll(b => b.typeBoid == TypeBoid.VioletTeam);
+        foreach (var boid in boids)
         {
-            boid._neigboards = boids;
+            if (boid.typeBoid == TypeBoid.BlueTeam)
+                boid._neigboards = blueBoids;
+            else
+                boid._neigboards = violetBoids;
             boid.weightSeparation = weightSeparation;
         }
     }
