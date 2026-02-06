@@ -18,7 +18,6 @@ public class IdleLeaderState : IState
     public void OnExit()
     {
         _agent.ChangeMove(true);
-        Debug.Log("Exit Idle Leader State");
     }
     public void OnUpdate()
     {

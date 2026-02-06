@@ -162,7 +162,8 @@ MonoBehaviour:
   _neigboards: []
   weightSeparation: 0
   radiusSeparation: 2
-  leader: {fileID: 2092827043}
+  _leaderRef: {fileID: 2092827043}
+  _distanceToLeader: 2.2
 --- !u!65 &124573984
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -356,7 +357,8 @@ MonoBehaviour:
   _neigboards: []
   weightSeparation: 0
   radiusSeparation: 2
-  leader: {fileID: 2092827043}
+  _leaderRef: {fileID: 2092827043}
+  _distanceToLeader: 2.2
 --- !u!65 &170566314
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -764,7 +766,8 @@ MonoBehaviour:
   _neigboards: []
   weightSeparation: 0
   radiusSeparation: 2
-  leader: {fileID: 2092827043}
+  _leaderRef: {fileID: 2092827043}
+  _distanceToLeader: 2.2
 --- !u!1001 &365021682
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1301,7 +1304,8 @@ MonoBehaviour:
   _neigboards: []
   weightSeparation: 0
   radiusSeparation: 2
-  leader: {fileID: 2092827043}
+  _leaderRef: {fileID: 2092827043}
+  _distanceToLeader: 2.2
 --- !u!65 &1049780588
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1427,7 +1431,8 @@ MonoBehaviour:
   _neigboards: []
   weightSeparation: 0
   radiusSeparation: 2
-  leader: {fileID: 2092827043}
+  _leaderRef: {fileID: 2092827043}
+  _distanceToLeader: 2.2
 --- !u!65 &1056452533
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1899,7 +1904,8 @@ MonoBehaviour:
   _neigboards: []
   weightSeparation: 0
   radiusSeparation: 2
-  leader: {fileID: 2092827043}
+  _leaderRef: {fileID: 2092827043}
+  _distanceToLeader: 2.2
 --- !u!65 &1599601553
 BoxCollider:
   m_ObjectHideFlags: 0

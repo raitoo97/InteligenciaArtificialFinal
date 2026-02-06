@@ -8,18 +8,21 @@ public class Boid : Agent , IFlockingSeparation
     public float weightSeparation;
     [Range(0f, 2f)]public float radiusSeparation;
     [SerializeField]private Leader _leaderRef;
+    public  float _distanceToLeader;
     private void OnEnable()
     {
         _fsm = new FSM();
-        _fsm.AddState(FSM.State.Move, new MoveBoidState(_leaderRef, this, this));
+        _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,this,_fsm));
+        _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
     }
     protected override void Start()
     {
         base.Start();
-        _fsm.ChangeState(FSM.State.Move);
+        _fsm.ChangeState(FSM.State.Idle);
     }
     protected override void Update()
     {
+        ApplySeparation();
         _fsm?.OnUpdate();
         base.Update();
     }
@@ -48,5 +51,7 @@ public class Boid : Agent , IFlockingSeparation
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(this.transform.position, radiusSeparation);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(this.transform.position, _distanceToLeader);
     }
 }

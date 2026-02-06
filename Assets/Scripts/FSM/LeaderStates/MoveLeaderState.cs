@@ -17,7 +17,6 @@ public class MoveLeaderState : IState
     }
     public void OnEnter()
     {
-        Debug.Log("Enter Move Leader State");
     }
     public void OnUpdate()
     {
@@ -35,6 +34,5 @@ public class MoveLeaderState : IState
     }
     public void OnExit()
     {
-        Debug.Log("Exit Move Leader State");
     }
 }
