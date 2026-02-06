@@ -5,6 +5,8 @@ public class IdleBoidState : IState
     private Leader _leader;
     private Agent _agent;
     private Boid _boid;
+    private bool _hasNeighbors;
+    private bool _isStopped;
     public IdleBoidState(Boid boid,Leader leader,Agent agent,FSM fsm)
     {
         _leader = leader;
@@ -14,11 +16,10 @@ public class IdleBoidState : IState
     }
     public void OnEnter()
     {
+        _isStopped = false;
+        CheckHasNeighbors();
     }
-    public void OnExit()
-    {
-        _agent.ChangeMove(true);
-    }
+
     public void OnUpdate()
     {
         var distance = Vector3.Distance(_boid.transform.position, _leader.transform.position);
@@ -27,26 +28,38 @@ public class IdleBoidState : IState
             _fsm.ChangeState(FSM.State.Move);
             return;
         }
-        bool hasNeighbors = false;
+        CheckHasNeighbors();
+        if (_hasNeighbors && _isStopped)
+        {
+            _agent.ChangeMove(true);
+            _isStopped = false;
+        }
+        else if (!_hasNeighbors && !_isStopped)
+        {
+            _agent.ChangeMove(false);
+            _isStopped = true;
+        }
+        if (_hasNeighbors)
+        {
+            _boid.ApplySeparation();
+        }
+    }
+    public void OnExit()
+    {
+        _agent.ChangeMove(true);
+    }
+    private void CheckHasNeighbors()
+    {
+        _hasNeighbors = false;
         foreach (var boid in _boid._neigboards)
         {
             if (boid == _boid) continue;
             float dist = Vector3.Distance(_boid.transform.position, boid.transform.position);
             if (dist < _boid.radiusSeparation)
             {
-                hasNeighbors = true;
-                break;
+                _hasNeighbors = true;
+                return;
             }
-        }
-        float distToLeader = Vector3.Distance(_boid.transform.position, _leader.transform.position);
-        bool tooCloseToLeader = distToLeader < _boid.radiusSeparation;
-        if (hasNeighbors || tooCloseToLeader)
-        {
-            _boid.ApplySeparation();
-        }
-        else
-        {
-            _agent.ChangeMove(false);
         }
     }
 }

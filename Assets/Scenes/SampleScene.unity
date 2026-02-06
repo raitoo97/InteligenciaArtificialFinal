@@ -516,8 +516,8 @@ MonoBehaviour:
   weightSeparation: 0
   leaderSeparationWeight: 0
   _leaderRef: {fileID: 2092827043}
-  radiusSeparation: 2.5
-  _distanceToLeader: 3.2
+  radiusSeparation: 2
+  _distanceToLeader: 3
 --- !u!114 &362079253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -754,7 +754,7 @@ MonoBehaviour:
   radiusArrive: 5
   _canMove: 0
   _isVioletLeader: 1
-  _nearDistance: 2
+  _nearDistance: 1.5
 --- !u!136 &470764900
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -961,8 +961,8 @@ MonoBehaviour:
   weightSeparation: 0
   leaderSeparationWeight: 0
   _leaderRef: {fileID: 2092827043}
-  radiusSeparation: 2.5
-  _distanceToLeader: 3.2
+  radiusSeparation: 2
+  _distanceToLeader: 3
 --- !u!65 &841267638
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1260,8 +1260,8 @@ MonoBehaviour:
   weightSeparation: 0
   leaderSeparationWeight: 0
   _leaderRef: {fileID: 470764899}
-  radiusSeparation: 2.5
-  _distanceToLeader: 3.2
+  radiusSeparation: 2
+  _distanceToLeader: 3
 --- !u!65 &1042904078
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1417,8 +1417,8 @@ MonoBehaviour:
   weightSeparation: 0
   leaderSeparationWeight: 0
   _leaderRef: {fileID: 2092827043}
-  radiusSeparation: 2.5
-  _distanceToLeader: 3.2
+  radiusSeparation: 2
+  _distanceToLeader: 3
 --- !u!65 &1071314120
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1799,8 +1799,8 @@ MonoBehaviour:
   weightSeparation: 0
   leaderSeparationWeight: 0
   _leaderRef: {fileID: 2092827043}
-  radiusSeparation: 2.5
-  _distanceToLeader: 3.2
+  radiusSeparation: 2
+  _distanceToLeader: 3
 --- !u!65 &1456996634
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2046,8 +2046,8 @@ MonoBehaviour:
   weightSeparation: 0
   leaderSeparationWeight: 0
   _leaderRef: {fileID: 470764899}
-  radiusSeparation: 2.5
-  _distanceToLeader: 3.2
+  radiusSeparation: 2
+  _distanceToLeader: 3
 --- !u!65 &1525484208
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2173,8 +2173,8 @@ MonoBehaviour:
   weightSeparation: 0
   leaderSeparationWeight: 0
   _leaderRef: {fileID: 2092827043}
-  radiusSeparation: 2.5
-  _distanceToLeader: 3.2
+  radiusSeparation: 2
+  _distanceToLeader: 3
 --- !u!65 &1599601553
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2420,8 +2420,8 @@ MonoBehaviour:
   weightSeparation: 0
   leaderSeparationWeight: 0
   _leaderRef: {fileID: 470764899}
-  radiusSeparation: 2.5
-  _distanceToLeader: 3.2
+  radiusSeparation: 2
+  _distanceToLeader: 3
 --- !u!65 &1630854753
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2630,8 +2630,8 @@ MonoBehaviour:
   weightSeparation: 0
   leaderSeparationWeight: 0
   _leaderRef: {fileID: 470764899}
-  radiusSeparation: 2.5
-  _distanceToLeader: 3.2
+  radiusSeparation: 2
+  _distanceToLeader: 3
 --- !u!65 &1797660024
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2836,7 +2836,7 @@ MonoBehaviour:
   radiusArrive: 5
   _canMove: 0
   _isVioletLeader: 0
-  _nearDistance: 2
+  _nearDistance: 1.5
 --- !u!136 &2092827044
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2979,8 +2979,8 @@ MonoBehaviour:
   weightSeparation: 0
   leaderSeparationWeight: 0
   _leaderRef: {fileID: 470764899}
-  radiusSeparation: 2.5
-  _distanceToLeader: 3.2
+  radiusSeparation: 2
+  _distanceToLeader: 3
 --- !u!65 &2099923756
 BoxCollider:
   m_ObjectHideFlags: 0
