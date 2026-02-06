@@ -21,26 +21,12 @@ public class IdleBoidState : IState
     public void OnUpdate()
     {
         CheckDistanceToLeader();
-        if (!HasCloseNeigboards())
-        {
-            _agent.StopMove();
-        }
+        _boid.ApplySeparation();
     }
     public void CheckDistanceToLeader()
     {
         var distance = Vector3.Distance(_boid.transform.position, _leader.transform.position);
         if (distance > _boid._distanceToLeader)
             _fsm.ChangeState(FSM.State.Move);
-    }
-    public bool HasCloseNeigboards()
-    {
-        foreach(var boid in _boid._neigboards)
-        {
-            if (boid == _boid) continue;
-            var distance = Vector3.Distance(_boid.transform.position, boid.transform.position);
-            if (distance < _boid.radiusSeparation)
-                return true;
-        }
-        return false;
     }
 }

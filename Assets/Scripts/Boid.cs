@@ -12,9 +12,10 @@ public class Boid : Agent , IFlockingSeparation
     [SerializeField]public List<Boid> _neigboards = new List<Boid>();
     public TypeBoid typeBoid;
     public float weightSeparation;
-    [Range(0f, 2f)]public float radiusSeparation;
+    public float leaderSeparationWeight;
     [SerializeField]private Leader _leaderRef;
-    public  float _distanceToLeader;
+    [Range(0f, 5f)] public float radiusSeparation;
+    [Range(0f, 4f)] public  float _distanceToLeader;
     private void OnEnable()
     {
         _fsm = new FSM();
@@ -28,7 +29,6 @@ public class Boid : Agent , IFlockingSeparation
     }
     protected override void Update()
     {
-        ApplySeparation();
         _fsm?.OnUpdate();
         base.Update();
     }
@@ -49,9 +49,21 @@ public class Boid : Agent , IFlockingSeparation
         steering = Vector3.ClampMagnitude(steering, _maxForce);
         return steering;
     }
+    public Vector3 SeparationFromLeader()
+    {
+        if (_leaderRef == null) return Vector3.zero;
+        var direction = this.transform.position - _leaderRef.transform.position;
+        var distance = direction.magnitude;
+        if (distance > radiusSeparation) return Vector3.zero;
+        var desired = direction.normalized * _maxSpeed;
+        var steering = desired - _velocity;
+        steering = Vector3.ClampMagnitude(steering, _maxForce);
+        return steering;
+    }
     public void ApplySeparation()
     {
         AddForce(Separation(_neigboards, radiusSeparation) * weightSeparation);
+        AddForce(SeparationFromLeader() * leaderSeparationWeight);
     }
     private void OnDrawGizmos()
     {

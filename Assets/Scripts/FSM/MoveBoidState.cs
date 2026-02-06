@@ -20,6 +20,7 @@ public class MoveBoidState : IState
         var distance = Vector3.Distance(_boid.transform.position, _leader.transform.position);
         if (distance < _boid._distanceToLeader)
             _fsm.ChangeState(FSM.State.Idle);
+        _boid.ApplySeparation();
         _agent.ApplyArrive(_leader.transform.position);
     }
     public void OnExit()
