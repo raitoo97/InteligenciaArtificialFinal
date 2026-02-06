@@ -6,15 +6,12 @@ public abstract class Agent : MonoBehaviour
     [SerializeField][Range(0, 8)]protected float _maxSpeed;
     [SerializeField][Range(0,1)]protected float _maxForce;
     [SerializeField]protected float radiusArrive;
-    [SerializeField]protected bool _canMove;
     protected virtual void Start()
     {
         _velocity = Vector3.zero;
-        _canMove = true;
     }
     protected virtual void Update()
     {
-        if (!_canMove) return;
         transform.position += _velocity * Time.deltaTime;
     }
     protected void AddForce (Vector3 dir)
@@ -44,8 +41,8 @@ public abstract class Agent : MonoBehaviour
     {
         AddForce(Arrive(target));
     }
-    public void ChangeMove(bool canMove)
+    public void StopMove()
     {
-        _canMove = canMove;
+        _velocity = Vector3.zero;
     }
 }

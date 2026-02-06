@@ -13,11 +13,10 @@ public class IdleLeaderState : IState
     }
     public void OnEnter()
     {
-        _agent.ChangeMove(false);
+        _agent.StopMove();
     }
     public void OnExit()
     {
-        _agent.ChangeMove(true);
     }
     public void OnUpdate()
     {

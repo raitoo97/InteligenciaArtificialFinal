@@ -14,19 +14,16 @@ public class IdleBoidState : IState
     }
     public void OnEnter()
     {
-        Debug.Log("Entering Idle State");
     }
-
     public void OnExit()
     {
-        _agent.ChangeMove(true);
     }
     public void OnUpdate()
     {
         CheckDistanceToLeader();
         if (!HasCloseNeigboards())
         {
-            _agent.ChangeMove(false);
+            _agent.StopMove();
         }
     }
     public void CheckDistanceToLeader()

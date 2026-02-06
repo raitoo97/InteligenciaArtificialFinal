@@ -14,7 +14,6 @@ public class MoveBoidState : IState
     }
     public void OnEnter()
     {
-        Debug.Log("Entering Move State");
     }
     public void OnUpdate()
     {
@@ -25,6 +24,5 @@ public class MoveBoidState : IState
     }
     public void OnExit()
     {
-        Debug.Log("Exit Move State");
     }
 }

@@ -1,10 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
+public enum TypeBoid
+{
+    BlueTeam,
+    VioletTeam
+}
 public class Boid : Agent , IFlockingSeparation
 {
     private FSM _fsm;
     [Header("BoidConfig")]
     [SerializeField]public List<Boid> _neigboards = new List<Boid>();
+    public TypeBoid typeBoid;
     public float weightSeparation;
     [Range(0f, 2f)]public float radiusSeparation;
     [SerializeField]private Leader _leaderRef;
