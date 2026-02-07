@@ -17,12 +17,14 @@ public class MoveLeaderState : IState
     }
     public void OnEnter()
     {
-        Debug.Log("Enter Move Leader State");
     }
     public void OnUpdate()
     {
         if (_mainPath.Count <= 0)
+        {
             _fsm.ChangeState(FSM.State.Idle);
+            return;
+        }
         MoveAlongPath();
     }
     private void MoveAlongPath()
@@ -35,6 +37,5 @@ public class MoveLeaderState : IState
     }
     public void OnExit()
     {
-        Debug.Log("Exit Move Leader State");
     }
 }

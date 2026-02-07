@@ -1,14 +1,26 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+public enum TypeBoid
+{
+    BlueTeam,
+    VioletTeam
+}
 public class Boid : Agent , IFlockingSeparation
 {
     private FSM _fsm;
     [Header("BoidConfig")]
-    [SerializeField][Range(0,3)]private float _nearDistance;
+    [SerializeField]public List<Boid> _neigboards = new List<Boid>();
+    public TypeBoid typeBoid;
+    public float weightSeparation;
+    public float leaderSeparationWeight;
+    [SerializeField]private Leader _leaderRef;
+    [Range(0f, 5f)] public float radiusSeparation;
+    [Range(0f, 4f)] public  float _distanceToLeader;
     private void OnEnable()
     {
         _fsm = new FSM();
+        _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,this,_fsm));
+        _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
     }
     protected override void Start()
     {
@@ -36,5 +48,28 @@ public class Boid : Agent , IFlockingSeparation
         var steering = desired - _velocity;
         steering = Vector3.ClampMagnitude(steering, _maxForce);
         return steering;
+    }
+    public Vector3 SeparationFromLeader()
+    {
+        if (_leaderRef == null) return Vector3.zero;
+        var direction = this.transform.position - _leaderRef.transform.position;
+        var distance = direction.magnitude;
+        if (distance > radiusSeparation) return Vector3.zero;
+        var desired = direction.normalized * _maxSpeed;
+        var steering = desired - _velocity;
+        steering = Vector3.ClampMagnitude(steering, _maxForce);
+        return steering;
+    }
+    public void ApplySeparation()
+    {
+        AddForce(Separation(_neigboards, radiusSeparation) * weightSeparation);
+        AddForce(SeparationFromLeader() * leaderSeparationWeight);
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(this.transform.position, radiusSeparation);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(this.transform.position, _distanceToLeader);
     }
 }

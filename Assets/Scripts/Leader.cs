@@ -36,12 +36,10 @@ public class Leader : Agent
                 {
                     if (LineOfSight.IsOnSight(this.transform.position, hitInfo.point))
                     {
-                        Debug.Log("Esta en vision voy directo");
                         GoDirectToTarget(hitInfo.point);
                     }
                     else
                     {
-                        Debug.Log(" NO Esta en vision calculo camino");
                         CalculatePathToTarget(hitInfo.point);
                     }
                 }
@@ -52,12 +50,10 @@ public class Leader : Agent
                 {
                     if (LineOfSight.IsOnSight(this.transform.position, hitInfo.point))
                     {
-                        Debug.Log("Esta en vision voy directo");
                         GoDirectToTarget(hitInfo.point);
                     }
                     else
                     {
-                        Debug.Log(" NO Esta en vision calculo camino");
                         CalculatePathToTarget(hitInfo.point);
                     }
                 }
