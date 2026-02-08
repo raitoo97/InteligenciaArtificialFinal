@@ -17,7 +17,7 @@ public abstract class Agent : MonoBehaviour
         if (!_canMove) return;
         transform.position += _velocity * Time.deltaTime;
     }
-    protected void AddForce (Vector3 dir)
+    public void AddForce (Vector3 dir)
     {
         _velocity = Vector3.ClampMagnitude(_velocity + dir, _maxSpeed);
         _velocity.y = 0;
@@ -48,4 +48,7 @@ public abstract class Agent : MonoBehaviour
     {
         _canMove = canMove;
     }
+    public Vector3 Velocity { get => _velocity; }
+    public float MaxSpeed { get => _maxSpeed; }
+    public float MaxForce { get => _maxForce; }
 }
