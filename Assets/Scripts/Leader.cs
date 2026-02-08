@@ -11,7 +11,7 @@ public class Leader : Agent
     private void OnEnable()
     {
         _fsm = new FSM();
-        _fsm.AddState(FSM.State.Move, new MoveLeaderState(this.transform, _nearDistance,_mainPath,this,_fsm));
+        _fsm.AddState(FSM.State.Move, new MoveLeaderState(this.transform, _nearDistance,this,_mainPath,this,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleLeaderState(_mainPath, this, _fsm));
     }
     protected override void Start()
@@ -70,6 +70,15 @@ public class Leader : Agent
         _mainPath.Clear();
         var path = PathFinding.CalculateTheta(this.transform.position, target);
         _mainPath.AddRange(path); // Cambio la lista no creo una nueva para no perder la referencia
+    }
+    public void RotateTo(Vector3 dir)
+    {
+        if(dir != Vector3.zero)
+        {
+            dir.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+        }
     }
     private void OnDrawGizmos()
     {

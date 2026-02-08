@@ -65,6 +65,15 @@ public class Boid : Agent , IFlockingSeparation
         AddForce(Separation(_neigboards, radiusSeparation) * weightSeparation);
         AddForce(SeparationFromLeader() * leaderSeparationWeight);
     }
+    public void RotateTo(Vector3 dir)
+    {
+        if (dir != Vector3.zero)
+        {
+            dir.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+        }
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
