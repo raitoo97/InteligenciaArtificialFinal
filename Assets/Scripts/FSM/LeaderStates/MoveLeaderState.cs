@@ -22,24 +22,8 @@ public class MoveLeaderState : IState
     }
     public void OnUpdate()
     {
-        var allBoids = BoidManager.instance.GetBoids;
-        List<Boid> enemyBoids;
-        if (_leader.IsVioletLeader)
-        {
-            enemyBoids = allBoids.FindAll(b => b.typeBoid == TypeBoid.BlueTeam);
-        }
-        else
-        {
-            enemyBoids = allBoids.FindAll(b => b.typeBoid == TypeBoid.VioletTeam);
-        }
-        foreach (var boid in enemyBoids)
-        {
-            if (FOV.InFieldOfView(boid.transform, _leader.transform,_leader.ViewRadius, _leader.ViewAngle))
-            {
-                _fsm.ChangeState(FSM.State.Attack);
-                return;
-            }
-        }
+        if (_leader.DetectEnemy())
+            return;
         if (_mainPath.Count <= 0)
         {
             _fsm.ChangeState(FSM.State.Idle);

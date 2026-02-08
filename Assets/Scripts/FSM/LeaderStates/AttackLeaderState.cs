@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class AttackLeaderState : IState
 {
     private Agent _agent;
@@ -11,17 +8,17 @@ public class AttackLeaderState : IState
     }
     public void OnEnter()
     {
-        Debug.Log("Attack State");
+        Debug.Log("Attack State Leader");
         _agent.ChangeMove(false);
     }
 
     public void OnExit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Exit Attack State Leader");
+         _agent.ChangeMove(true);
     }
 
     public void OnUpdate()
     {
-        throw new System.NotImplementedException();
     }
 }
