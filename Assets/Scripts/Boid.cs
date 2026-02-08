@@ -16,6 +16,8 @@ public class Boid : Agent , IFlockingSeparation
     [SerializeField]private Leader _leaderRef;
     [Range(0f, 5f)] public float radiusSeparation;
     [Range(0f, 4f)] public  float _distanceToLeader;
+    [SerializeField] private float _viewRadius;
+    [SerializeField] private float _viewAngle;
     private void OnEnable()
     {
         _fsm = new FSM();
@@ -78,7 +80,13 @@ public class Boid : Agent , IFlockingSeparation
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(this.transform.position, radiusSeparation);
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(this.transform.position, _distanceToLeader);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, _viewRadius);
+        Vector3 rightDir = Quaternion.Euler(0, _viewAngle * 0.5f, 0) * transform.forward;
+        Vector3 leftDir = Quaternion.Euler(0, -_viewAngle * 0.5f, 0) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + rightDir * _viewRadius);
+        Gizmos.DrawLine(transform.position, transform.position + leftDir * _viewRadius);
     }
 }
