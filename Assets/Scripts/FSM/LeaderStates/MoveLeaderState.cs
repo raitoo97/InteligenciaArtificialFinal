@@ -7,12 +7,14 @@ public class MoveLeaderState : IState
     private Agent _agent;
     private FSM _fsm;
     private float _nearDistance;
-    public MoveLeaderState(Transform transform, float nearDistnace,List<Vector3> mainPath, Agent agent ,FSM fsm)
+    private Leader _leader;
+    public MoveLeaderState(Transform transform, float nearDistnace,Leader leader,List<Vector3> mainPath, Agent agent ,FSM fsm)
     {
         _transform = transform;
         _nearDistance = nearDistnace;
         _mainPath = mainPath;
         _agent = agent;
+        _leader = leader;
         _fsm = fsm;
     }
     public void OnEnter()
@@ -31,6 +33,8 @@ public class MoveLeaderState : IState
     {
         if (_mainPath.Count == 0) return;
         var target = _mainPath[0];
+        Vector3 dir = target - _transform.position;
+        _leader.RotateTo(dir);
         _agent.ApplyArrive(target);
         if (Vector3.Distance(_transform.position, target) < _nearDistance)
             _mainPath.RemoveAt(0);

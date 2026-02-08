@@ -47,6 +47,8 @@ public class MoveBoidState : IState
     {
         if (_pathToLeader.Count == 0) return;
         var target = _pathToLeader[0];
+        var dir = target - _boid.transform.position;
+        _boid.RotateTo(dir);
         _agent.ApplyArrive(target);
         if (Vector3.Distance(_boid.transform.position, target) < 1.5f)
             _pathToLeader.RemoveAt(0);

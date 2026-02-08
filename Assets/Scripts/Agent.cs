@@ -5,6 +5,7 @@ public abstract class Agent : MonoBehaviour
     [Header("Agent Propieties")]
     [SerializeField][Range(0, 8)]protected float _maxSpeed;
     [SerializeField][Range(0,1)]protected float _maxForce;
+    [SerializeField][Range(0,3)]protected float _obstacleAvoidanceWeight;
     [SerializeField]protected float radiusArrive;
     [SerializeField]protected bool _canMove;
     protected virtual void Start()
@@ -17,7 +18,7 @@ public abstract class Agent : MonoBehaviour
         if (!_canMove) return;
         transform.position += _velocity * Time.deltaTime;
     }
-    protected void AddForce (Vector3 dir)
+    public void AddForce (Vector3 dir)
     {
         _velocity = Vector3.ClampMagnitude(_velocity + dir, _maxSpeed);
         _velocity.y = 0;
@@ -48,4 +49,8 @@ public abstract class Agent : MonoBehaviour
     {
         _canMove = canMove;
     }
+    public Vector3 Velocity { get => _velocity; }
+    public float MaxSpeed { get => _maxSpeed; }
+    public float MaxForce { get => _maxForce; }
+    public float ObstacleAvoidanceWeight { get => _obstacleAvoidanceWeight; }
 }
