@@ -10,7 +10,7 @@ public class ObstacleAvoidance : MonoBehaviour
     }
     private void Update()
     {
-        _agent.AddForce(ApplyObstacleAvoidance());
+        _agent.AddForce(ApplyObstacleAvoidance() * _agent.ObstacleAvoidanceWeight);
     }
     private Vector3 ApplyObstacleAvoidance()
     {

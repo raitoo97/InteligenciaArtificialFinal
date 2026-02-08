@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     private List<Boid> boids = new List<Boid>();
     [Range(0f, 2f)]public float weightSeparation;
     [Range(0f, 1f)] public float weightSeparationLeader;
+
     private void Awake()
     {
         if (instance == null)

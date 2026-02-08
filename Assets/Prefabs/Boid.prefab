@@ -227,6 +227,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxSpeed: 4.5
   _maxForce: 0.1
+  _obstacleAvoidanceWeight: 0
   radiusArrive: 1
   _canMove: 0
   _neigboards: []
@@ -248,4 +249,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 416e85c1ba9dec148806b8fd291e0473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 1
+  radius: 0.5
