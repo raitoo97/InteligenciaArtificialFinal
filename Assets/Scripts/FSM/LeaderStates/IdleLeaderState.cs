@@ -5,11 +5,13 @@ public class IdleLeaderState : IState
     private Agent _agent;
     private List<Vector3> _mainPath = new List<Vector3>();
     private FSM _fsm;
-    public IdleLeaderState(List<Vector3> mainPath,Agent agent, FSM fsm)
+    private Leader _leader;
+    public IdleLeaderState(Leader leader, List<Vector3> mainPath,Agent agent, FSM fsm)
     {
         _mainPath = mainPath;
         _agent = agent;
         _fsm = fsm;
+        _leader = leader;
     }
     public void OnEnter()
     {
@@ -21,7 +23,9 @@ public class IdleLeaderState : IState
     }
     public void OnUpdate()
     {
-        if(_mainPath.Count > 0)
+        if (_leader.DetectEnemy())
+            return;
+        if (_mainPath.Count > 0)
         {
             _fsm.ChangeState(FSM.State.Move);
             return;

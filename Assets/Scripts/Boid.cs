@@ -16,11 +16,14 @@ public class Boid : Agent , IFlockingSeparation
     [SerializeField]private Leader _leaderRef;
     [Range(0f, 5f)] public float radiusSeparation;
     [Range(0f, 4f)] public  float _distanceToLeader;
+    [SerializeField] private float _viewRadius;
+    [SerializeField] private float _viewAngle;
     private void OnEnable()
     {
         _fsm = new FSM();
         _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,this,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
+        _fsm.AddState(FSM.State.Attack, new AttackBoidState(this));
     }
     protected override void Start()
     {
@@ -74,11 +77,62 @@ public class Boid : Agent , IFlockingSeparation
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
         }
     }
+    public bool DetectEnemy()
+    {
+        var enemyLeader = LeaderManager.instance.GetLeader(_leaderRef);
+        if (enemyLeader != null && FOV.InFieldOfView(enemyLeader.transform, this.transform, _viewRadius, _viewAngle))
+        {
+            AlertAllies();
+            return true;
+        }
+        var allBoids = BoidManager.instance.GetBoids;
+        List<Boid> enemyBoids;
+        if (_leaderRef.IsVioletLeader)
+        {
+            enemyBoids = allBoids.FindAll(b => b.typeBoid == TypeBoid.BlueTeam);
+        }
+        else
+        {
+            enemyBoids = allBoids.FindAll(b => b.typeBoid == TypeBoid.VioletTeam);
+        }
+        foreach (var boid in enemyBoids)
+        {
+            var anyBoidInFOV = FOV.InFieldOfView(boid.transform, this.transform, _viewRadius, _viewAngle);
+            if (anyBoidInFOV)
+            {
+                AlertAllies();
+                return true;
+            }
+        }
+        return false;
+    }
+    public void ForceAttack()
+    {
+        _fsm.ChangeState(FSM.State.Attack);
+    }
+    private void AlertAllies()
+    {
+        var allBoids = BoidManager.instance.GetBoids;
+        foreach (var boid in allBoids)
+        {
+            if (boid.typeBoid == this.typeBoid)
+            {
+                boid.ForceAttack();
+            }
+        }
+        _leaderRef.ForceAttack();
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(this.transform.position, radiusSeparation);
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(this.transform.position, _distanceToLeader);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, _viewRadius);
+        Vector3 rightDir = Quaternion.Euler(0, _viewAngle * 0.5f, 0) * transform.forward;
+        Vector3 leftDir = Quaternion.Euler(0, -_viewAngle * 0.5f, 0) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + rightDir * _viewRadius);
+        Gizmos.DrawLine(transform.position, transform.position + leftDir * _viewRadius);
     }
 }

@@ -21,6 +21,8 @@ public class IdleBoidState : IState
     }
     public void OnUpdate()
     {
+        if (_boid.DetectEnemy())
+            return;
         var distance = Vector3.Distance(_boid.transform.position, _leader.transform.position);
         if (distance > _boid._distanceToLeader)
         {
