@@ -12,11 +12,15 @@ public class MoveBoidState : IState
     }
     public void OnEnter()
     {
+        _boid.ResetAlert();
     }
     public void OnUpdate()
     {
         if (_boid.DetectEnemy())
+        {
+            _fsm.ChangeState(FSM.State.Attack);
             return;
+        }
         var distance = Vector3.Distance(_boid.transform.position, _leader.transform.position);
         if (distance < _boid._distanceToLeader)
         {

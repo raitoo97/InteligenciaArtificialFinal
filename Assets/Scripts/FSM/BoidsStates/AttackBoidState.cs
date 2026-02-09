@@ -33,13 +33,8 @@ public class AttackBoidState : IState
     {
         if (_target == null)
         {
-            _target = FindTarget();
-            if (_target == null)
-            {
-                _fsm.ChangeState(FSM.State.SearchEnemy);
-                return;
-            }
-
+            _fsm.ChangeState(FSM.State.SearchEnemy);
+            return;
         }
         Vector3 dir = _target.position - _boid.transform.position;
         var dist = dir.magnitude;

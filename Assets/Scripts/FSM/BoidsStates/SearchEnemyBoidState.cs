@@ -6,6 +6,8 @@ public class SearchEnemyBoidState : IState
     private Agent _agent;
     private FSM _fsm;
     private Transform _target;
+    private float _searchTimer;
+    private float _searchInterval = 0.5f;
     public SearchEnemyBoidState(Boid boid, Agent agent, FSM fsm)
     {
         _boid = boid;
@@ -16,6 +18,7 @@ public class SearchEnemyBoidState : IState
     {
         Debug.Log("Boid enter search");
         _target = ChooseRandomEnemy();
+        _searchTimer = _searchInterval;
         _boid.ClearPath();
         _agent.ChangeMove(true);
     }
@@ -26,8 +29,15 @@ public class SearchEnemyBoidState : IState
     public void OnUpdate()
     {
         if (_target == null)
+        {
+            _searchTimer -= Time.deltaTime;
+            if (_searchTimer <= 0f)
+            {
+                _searchTimer = _searchInterval;
+                _target = ChooseRandomEnemy();
+            }
             return;
-        Vector3 dir = _target.position - _boid.transform.position;
+        }
         if (_boid.GetPath.Count > 0)
         {
             _boid.MoveAlongPath();

@@ -22,6 +22,7 @@ public class Boid : Agent , IFlockingSeparation
     [Header("FOV")]
     [SerializeField] private float _viewRadius;
     [SerializeField] private float _viewAngle;
+    private bool _alreadyAlerted;
     private void OnEnable()
     {
         _fsm = new FSM();
@@ -85,10 +86,12 @@ public class Boid : Agent , IFlockingSeparation
     }
     public bool DetectEnemy()
     {
+        if (_alreadyAlerted) return true;
         var enemyLeader = LeaderManager.instance.GetLeader(_leaderRef);
         if (enemyLeader != null && FOV.InFieldOfView(enemyLeader.transform, this.transform, _viewRadius, _viewAngle))
         {
             AlertAllies();
+            _alreadyAlerted = true;
             return true;
         }
         var allBoids = BoidManager.instance.GetBoids;
@@ -107,16 +110,21 @@ public class Boid : Agent , IFlockingSeparation
             if (anyBoidInFOV)
             {
                 AlertAllies();
+                _alreadyAlerted = true;
                 return true;
             }
         }
         return false;
     }
+    public void ResetAlert()
+    {
+        _alreadyAlerted = false;
+    }
     public void ForceAttack()
     {
         _fsm.ChangeState(FSM.State.Attack);
     }
-    private void AlertAllies()
+    public void AlertAllies()
     {
         var allBoids = BoidManager.instance.GetBoids;
         foreach (var boid in allBoids)
