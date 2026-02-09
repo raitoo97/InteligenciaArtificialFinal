@@ -16,6 +16,9 @@ public class Boid : Agent , IFlockingSeparation
     [SerializeField]private Leader _leaderRef;
     [Range(0f, 5f)] public float radiusSeparation;
     [Range(0f, 4f)] public  float _distanceToLeader;
+    [SerializeField] private float _maxLife;
+    private Life _life;
+    [Header("FOV")]
     [SerializeField] private float _viewRadius;
     [SerializeField] private float _viewAngle;
     private void OnEnable()
@@ -24,6 +27,7 @@ public class Boid : Agent , IFlockingSeparation
         _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,this,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
         _fsm.AddState(FSM.State.Attack, new AttackBoidState(this));
+        _life = new Life(_maxLife);
     }
     protected override void Start()
     {
@@ -134,5 +138,13 @@ public class Boid : Agent , IFlockingSeparation
         Vector3 leftDir = Quaternion.Euler(0, -_viewAngle * 0.5f, 0) * transform.forward;
         Gizmos.DrawLine(transform.position, transform.position + rightDir * _viewRadius);
         Gizmos.DrawLine(transform.position, transform.position + leftDir * _viewRadius);
+    }
+    private void OnDestroy()
+    {
+        _fsm.RemoveState(FSM.State.Idle);
+        _fsm.RemoveState(FSM.State.Move);
+        _fsm.RemoveState(FSM.State.Attack);
+        _fsm = null;
+        _life = null;
     }
 }
