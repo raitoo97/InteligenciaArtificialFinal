@@ -5,16 +5,21 @@ public class AttackBoidState : IState
     private Agent _agent;
     private FSM _fsm;
     private Transform _target;
+    private Transform _gunSight;
     private float _attackRange = 10f;
+    private float _shootRange = 3f;
     private float _maxCooldown;
     private float _currentCooldown;
     private bool _hasNeighbors;
+    private bool _leaderTooClose;
+    private bool _hasEnemyNearby;
     private bool _isStopped;
-    public AttackBoidState(Boid boid,Agent agent,FSM fsm)
+    public AttackBoidState(Transform gunSight,Boid boid,Agent agent,FSM fsm)
     {
         _agent = agent;
         _boid = boid;
         _fsm = fsm;
+        _gunSight = gunSight;
     }
     public void OnEnter()
     {
@@ -54,9 +59,10 @@ public class AttackBoidState : IState
             _boid.GoDirectToTarget(_target.position);
             return;
         }
-        bool leaderTooClose = _boid.HasLeaderTooClose();
+        _leaderTooClose = _boid.HasLeaderTooClose();
         _boid.CheckHasNeighbors(ref _hasNeighbors);
-        bool shouldMove = _hasNeighbors || leaderTooClose;
+        _boid.CheckHasEnemyNeighbors(ref _hasEnemyNearby, _shootRange);
+        bool shouldMove = _hasNeighbors || _leaderTooClose || _hasEnemyNearby;
         if (shouldMove && _isStopped)
         {
             _agent.ChangeMove(true);
@@ -68,10 +74,15 @@ public class AttackBoidState : IState
             _isStopped = true;
         }
         if (shouldMove)
+        {
             _boid.ApplySeparation();
+            if (_hasEnemyNearby)
+                _boid.ApplyEnemySeparation(_attackRange);
+        }
         if (dir.sqrMagnitude > 0.001f)
             _boid.RotateTo(dir);
-        TryShoot();
+        if (hasLOS)
+            TryShoot();
     }
     private Transform FindTarget()
     {
@@ -95,15 +106,12 @@ public class AttackBoidState : IState
     }
     private void TryShoot()
     {
-        if (_currentCooldown > 0)
-        {
-            _currentCooldown -= Time.deltaTime;
+        if (Time.time - _currentCooldown < _maxCooldown)
             return;
-        }
         var bullet = PoolBullet.instance.GetBullet();
-        bullet.transform.position = _boid.transform.position;
-        bullet.transform.rotation = _boid.transform.rotation;
+        bullet.transform.position = _gunSight.position;
+        bullet.transform.rotation = _gunSight.rotation;
         bullet.GetComponent<Bullet>().Shoot(_boid.typeBoid);
-        _currentCooldown = _maxCooldown;
+        _currentCooldown = Time.time;
     }
 }

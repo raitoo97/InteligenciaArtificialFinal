@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 public enum TypeBoid
 {
     BlueTeam,
@@ -12,8 +13,11 @@ public class Boid : Agent , IFlockingSeparation
     [SerializeField]public List<Boid> _neigboards = new List<Boid>();
     private List<Vector3> _currentPath = new List<Vector3>();
     public TypeBoid typeBoid;
+    [SerializeField]private Transform _gunSight;
+    [SerializeField]private Slider _slider;
     public float weightSeparation;
     public float leaderSeparationWeight;
+    public float enemySeparationWeight;
     [SerializeField]private Leader _leaderRef;
     [Range(0f, 5f)] public float radiusSeparation;
     [Range(0f, 4f)] public  float _distanceToLeader;
@@ -28,9 +32,9 @@ public class Boid : Agent , IFlockingSeparation
         _fsm = new FSM();
         _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
-        _fsm.AddState(FSM.State.Attack, new AttackBoidState(this,this,_fsm));
+        _fsm.AddState(FSM.State.Attack, new AttackBoidState(_gunSight, this,this,_fsm));
         _fsm.AddState(FSM.State.SearchEnemy, new SearchEnemyBoidState(this,this,_fsm));
-        _life = new Life(_maxLife);
+        _life = new Life(this.gameObject,_maxLife, _slider);
     }
     protected override void Start()
     {
@@ -75,6 +79,11 @@ public class Boid : Agent , IFlockingSeparation
         AddForce(Separation(_neigboards, radiusSeparation) * weightSeparation);
         AddForce(SeparationFromLeader() * leaderSeparationWeight);
     }
+    public void ApplyEnemySeparation(float range)
+    {
+        var enemies = BoidManager.instance.GetBoids.FindAll(b => b.typeBoid != typeBoid);
+        AddForce(Separation(enemies, range) * enemySeparationWeight);
+    }
     public void RotateTo(Vector3 dir)
     {
         if (dir != Vector3.zero)
@@ -106,6 +115,7 @@ public class Boid : Agent , IFlockingSeparation
         }
         foreach (var boid in enemyBoids)
         {
+            if (boid == null) continue;
             var anyBoidInFOV = FOV.InFieldOfView(boid.transform, this.transform, _viewRadius, _viewAngle);
             if (anyBoidInFOV)
             {
@@ -129,6 +139,7 @@ public class Boid : Agent , IFlockingSeparation
         var allBoids = BoidManager.instance.GetBoids;
         foreach (var boid in allBoids)
         {
+            if (boid == null) continue;
             if (boid.typeBoid == this.typeBoid)
             {
                 boid.ForceAttack();
@@ -142,11 +153,28 @@ public class Boid : Agent , IFlockingSeparation
         foreach (var boid in _neigboards)
         {
             if (boid == this) continue;
+            if (boid == null) continue;
             float dist = Vector3.Distance(this.transform.position, boid.transform.position);
             if (dist < radiusSeparation)
             {
                 _hasNeighbors = true;
                 return;
+            }
+        }
+    }
+    public void CheckHasEnemyNeighbors(ref bool hasEnemyNearby, float range)
+    {
+        hasEnemyNearby = false; // Resetear antes de chequear
+        var allBoids = BoidManager.instance.GetBoids;
+        foreach (var boid in allBoids)
+        {
+            if (boid.typeBoid == this.typeBoid)continue;
+            if (boid == null) continue;
+            float dist = Vector3.Distance(this.transform.position, boid.transform.position);
+            if (dist < range)
+            {
+                hasEnemyNearby = true;
+                return; // Ya encontramos un enemigo cercano, no hace falta seguir
             }
         }
     }
@@ -200,6 +228,7 @@ public class Boid : Agent , IFlockingSeparation
         _fsm.RemoveState(FSM.State.Move);
         _fsm.RemoveState(FSM.State.Attack);
         _fsm.RemoveState(FSM.State.SearchEnemy);
+        BoidManager.instance.RemoveBoid(this);
         _fsm = null;
         _life = null;
     }

@@ -4,20 +4,24 @@ public class Life
 {
     private float _life;
     private Slider _slider;
-    public Life(float life)
+    private GameObject _gameObject;
+    public Life(GameObject go,float life, Slider slider)
     {
         _life = life;
+        _slider = slider;
+        _gameObject = go;
     }
     private void CheckLife()
     {
         if (_life <= 0)
         {
-            Debug.Log("Muerto");
+            GameObject.Destroy(_gameObject);
         }
     }
     public void TakeDamage(float damage)
     {
         _life -= damage;
+        _slider.value = _life;
         CheckLife();
     }
     public float GetLife { get => _life; }

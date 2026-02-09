@@ -612,7 +612,8 @@ MonoBehaviour:
   radiusArrive: 5
   _canMove: 0
   _isVioletLeader: 0
-  _maxLife: 0
+  _maxLife: 100
+  _slider: {fileID: 2696242135880295471}
   _nearDistance: 1.5
   _viewRadius: 6
   _viewAngle: 90

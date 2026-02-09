@@ -399,6 +399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weightSeparation: 2
   weightSeparationLeader: 1
+  weightSeparationEnemy: 1
 --- !u!114 &324804946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2573,9 +2574,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5977205294646252810, guid: e01913a80168791458c443863f32c2be,
         type: 3}
+      propertyPath: typeBoid
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5977205294646252810, guid: e01913a80168791458c443863f32c2be,
+        type: 3}
       propertyPath: _leaderRef
       value: 
       objectReference: {fileID: 2092827043}
+    - target: {fileID: 7545944105001765466, guid: e01913a80168791458c443863f32c2be,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0a3caa3bf881d1b4fab42f5422137cb9, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2997,19 +3008,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5977205294646252810, guid: e01913a80168791458c443863f32c2be,
         type: 3}
-      propertyPath: typeBoid
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5977205294646252810, guid: e01913a80168791458c443863f32c2be,
-        type: 3}
       propertyPath: _leaderRef
       value: 
       objectReference: {fileID: 672670835}
-    - target: {fileID: 7545944105001765466, guid: e01913a80168791458c443863f32c2be,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: bf75663115f449b469a616ad358b3bdb, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3023,16 +3024,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2696242135880295471, guid: 453851fd62050ae408a14a3dd3851830,
-        type: 3}
-      propertyPath: m_TargetGraphic
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
-        type: 3}
-      propertyPath: _maxLife
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 8203259677889813518, guid: 453851fd62050ae408a14a3dd3851830,
         type: 3}
       propertyPath: m_LocalPosition.x

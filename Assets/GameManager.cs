@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     private List<Boid> boids = new List<Boid>();
     [Range(0f, 2f)]public float weightSeparation;
     [Range(0f, 1f)] public float weightSeparationLeader;
-
+    [Range(0f, 2f)] public float weightSeparationEnemy;
     private void Awake()
     {
         if (instance == null)
@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
                 boid._neigboards = violetBoids;
             boid.weightSeparation = weightSeparation;
             boid.leaderSeparationWeight = weightSeparationLeader;
+            boid.enemySeparationWeight = weightSeparationEnemy;
         }
     }
 }
