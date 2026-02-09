@@ -84,12 +84,17 @@ public class Leader : Agent
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
         }
     }
+    public void ForceAttack()
+    {
+        _fsm.ChangeState(FSM.State.Attack);
+    }
     public bool DetectEnemy()
     {
-        var enemyLeader = LeaderManager.instance.GetEnemyLeader(this);
-        if (enemyLeader != null && FOV.InFieldOfView(enemyLeader.transform, this.transform,ViewRadius,ViewAngle))
+        var enemyLeader = LeaderManager.instance.GetLeader(this);
+        if (enemyLeader != null && FOV.InFieldOfView(enemyLeader.transform, this.transform, _viewRadius, _viewAngle))
         {
             _fsm.ChangeState(FSM.State.Attack);
+            AlertBoids();
             return true;
         }
         var allBoids = BoidManager.instance.GetBoids;
@@ -104,14 +109,26 @@ public class Leader : Agent
         }
         foreach (var boid in enemyBoids)
         {
-            var anyBoidInFOV = FOV.InFieldOfView(boid.transform, this.transform,ViewRadius,ViewAngle);
+            var anyBoidInFOV = FOV.InFieldOfView(boid.transform, this.transform, _viewRadius, _viewAngle);
             if (anyBoidInFOV)
             {
                 _fsm.ChangeState(FSM.State.Attack);
+                AlertBoids();
                 return true;
             }
         }
         return false;
+    }
+    private void AlertBoids()
+    {
+        var allBoids = BoidManager.instance.GetBoids;
+        foreach (var boid in allBoids)
+        {
+            if (boid.typeBoid == (_isVioletLeader ? TypeBoid.VioletTeam : TypeBoid.BlueTeam))
+            {
+                boid.ForceAttack();
+            }
+        }
     }
     private void OnDrawGizmos()
     {
@@ -127,6 +144,4 @@ public class Leader : Agent
         Gizmos.DrawLine(transform.position, transform.position + leftDir * _viewRadius);
     }
     public bool IsVioletLeader { get => _isVioletLeader; }
-    public float ViewRadius { get => _viewRadius; }
-    public float ViewAngle { get => _viewAngle; }
 }

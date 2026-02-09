@@ -21,7 +21,7 @@ public class LeaderManager : MonoBehaviour
         if (_leaders.Contains(leader))
             _leaders.Remove(leader);
     }
-    public Leader GetEnemyLeader(Leader leader)
+    public Leader GetLeader(Leader leader)
     {
         if (leader.IsVioletLeader)
             return _leaders.Find(l => !l.IsVioletLeader);

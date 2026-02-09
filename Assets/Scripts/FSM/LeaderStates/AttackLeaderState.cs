@@ -8,13 +8,12 @@ public class AttackLeaderState : IState
     }
     public void OnEnter()
     {
-        Debug.Log("Attack State Leader");
         _agent.ChangeMove(false);
+        Debug.Log("Leader enter attack");
     }
 
     public void OnExit()
     {
-        Debug.Log("Exit Attack State Leader");
          _agent.ChangeMove(true);
     }
 

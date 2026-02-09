@@ -1,14 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class AttackBoidState : IState
 {
+    private Agent _agent;
+    public AttackBoidState(Agent agent)
+    {
+        _agent = agent;
+    }
     public void OnEnter()
     {
-        throw new System.NotImplementedException();
+        _agent.ChangeMove(false);
+        Debug.Log("Enter Attack Boid");
     }
-
     public void OnExit()
     {
         throw new System.NotImplementedException();
@@ -16,6 +18,5 @@ public class AttackBoidState : IState
 
     public void OnUpdate()
     {
-        throw new System.NotImplementedException();
     }
 }

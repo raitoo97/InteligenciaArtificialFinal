@@ -19,6 +19,8 @@ public class MoveBoidState : IState
     }
     public void OnUpdate()
     {
+        if (_boid.DetectEnemy())
+            return;
         var distance = Vector3.Distance(_boid.transform.position, _leader.transform.position);
         if (distance < _boid._distanceToLeader)
         {
@@ -33,15 +35,12 @@ public class MoveBoidState : IState
         }
         if (LineOfSight.IsOnSight(_boid.transform.position, _leader.transform.position))
         {
-            Debug.Log("Go direct to leader");
             GoDirectToLeader(_leader.transform.position);
         }
         else
         {
-            Debug.Log("Calculate path to leader");
             CalculatePathToLeader(_leader.transform.position);
         }
-
     }
     private void MoveAlongPath()
     {
