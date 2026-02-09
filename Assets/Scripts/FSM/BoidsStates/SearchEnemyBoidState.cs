@@ -14,6 +14,7 @@ public class SearchEnemyBoidState : IState
     }
     public void OnEnter()
     {
+        Debug.Log("Boid enter search");
         _target = ChooseRandomEnemy();
         _boid.ClearPath();
         _agent.ChangeMove(true);
