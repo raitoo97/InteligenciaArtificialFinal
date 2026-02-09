@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PoolBullet : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public static PoolBullet instance;
     void Start()
     {
         
