@@ -5,7 +5,8 @@ public class Leader : Agent
     private FSM _fsm;
     [Header("LeaderConfig")]
     [SerializeField]private bool _isVioletLeader;
-    [SerializeField] private float _life;
+    [SerializeField]private float _maxLife;
+    private Life _life;
     [Header("MoveState")]
     [SerializeField][Range(0,3)]private float _nearDistance;
     private List<Vector3> _mainPath = new List<Vector3>();
@@ -19,6 +20,7 @@ public class Leader : Agent
         _fsm.AddState(FSM.State.Move, new MoveLeaderState(this.transform, _nearDistance,this,_mainPath,this,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleLeaderState(this,_mainPath, this, _fsm));
         _fsm.AddState(FSM.State.Attack, new AttackLeaderState(this));
+        _life = new Life(_maxLife);
     }
     protected override void Start()
     {
@@ -144,6 +146,14 @@ public class Leader : Agent
         Vector3 leftDir = Quaternion.Euler(0, -_viewAngle * 0.5f, 0) * transform.forward;
         Gizmos.DrawLine(transform.position, transform.position + rightDir * _viewRadius);
         Gizmos.DrawLine(transform.position, transform.position + leftDir * _viewRadius);
+    }
+    private void OnDestroy()
+    {
+        _fsm.RemoveState(FSM.State.Idle);
+        _fsm.RemoveState(FSM.State.Move);
+        _fsm.RemoveState(FSM.State.Attack);
+        _fsm = null;
+        _life = null;
     }
     public bool IsVioletLeader { get => _isVioletLeader; }
 }
