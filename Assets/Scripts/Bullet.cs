@@ -28,8 +28,8 @@ public class Bullet : MonoBehaviour
             if ((bulletType == BulletType.Blue && boid.typeBoid == TypeBoid.VioletTeam) ||(bulletType == BulletType.Violet && boid.typeBoid == TypeBoid.BlueTeam))
             {
                 boid.Life.TakeDamage(10); // ejemplo de daño
+                DesactivateBullet();
             }
-            DesactivateBullet();
         }
     }
     void Update()

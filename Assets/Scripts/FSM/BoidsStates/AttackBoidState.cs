@@ -19,12 +19,13 @@ public class AttackBoidState : IState
     {
         _target = FindTarget();
         _maxCooldown = 3;
-        _currentCooldown = _maxCooldown;
         _isStopped = false;
+        Debug.Log("Boid enter attack");
     }
     public void OnExit()
     {
         _agent.ChangeMove(true);
+        Debug.Log("EXIT Attack");
     }
     public void OnUpdate()
     {
@@ -43,7 +44,11 @@ public class AttackBoidState : IState
         }
         if (dist > _attackRange)
         {
-            _agent.ApplySeek(_target.position);
+            bool hasLOS = LineOfSight.IsOnSight(_boid.transform.position,_target.position);
+            if (hasLOS)
+            {
+                _agent.ApplySeek(_target.position);
+            }
             return;
         }
         else
@@ -91,17 +96,15 @@ public class AttackBoidState : IState
     }
     private void TryShoot()
     {
-        if (_currentCooldown <= 0)
-        {
-            var bullet = PoolBullet.instance.GetBullet();
-            bullet.transform.position = _boid.transform.position;
-            bullet.transform.rotation = _boid.transform.rotation;
-            bullet.GetComponent<Bullet>().Shoot(_boid.typeBoid);
-            _currentCooldown = _maxCooldown;
-        }
-        else
+        if (_currentCooldown > 0)
         {
             _currentCooldown -= Time.deltaTime;
+            return;
         }
+        var bullet = PoolBullet.instance.GetBullet();
+        bullet.transform.position = _boid.transform.position;
+        bullet.transform.rotation = _boid.transform.rotation;
+        bullet.GetComponent<Bullet>().Shoot(_boid.typeBoid);
+        _currentCooldown = _maxCooldown;
     }
 }

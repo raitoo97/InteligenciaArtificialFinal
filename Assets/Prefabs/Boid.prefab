@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7402811723438444082}
   - component: {fileID: 2024744362982058693}
   - component: {fileID: 4769114220039724724}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 5977205294646252810}
   - component: {fileID: 4567779101910941787}
   - component: {fileID: 6541419851784679149}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Boid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,7 +239,7 @@ MonoBehaviour:
   _leaderRef: {fileID: 0}
   radiusSeparation: 2
   _distanceToLeader: 2.5
-  _maxLife: 0
+  _maxLife: 100
   _viewRadius: 4
   _viewAngle: 90
 --- !u!114 &4567779101910941787
@@ -291,7 +291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2734214625730329357}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -328,7 +328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7718078291248666946}
   - component: {fileID: 1476333048672862960}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -418,7 +418,7 @@ GameObject:
   - component: {fileID: 2473788807145595780}
   - component: {fileID: 3660246801249226632}
   - component: {fileID: 3289150717339837205}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -494,7 +494,7 @@ GameObject:
   - component: {fileID: 1789234488876788595}
   - component: {fileID: 3618131432612877204}
   - component: {fileID: 8819172616526805384}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: BoidCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -595,7 +595,7 @@ GameObject:
   - component: {fileID: 7853130384295519319}
   - component: {fileID: 882835503183063809}
   - component: {fileID: 4719703199384757545}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -12,6 +12,10 @@ public class PoolBullet : MonoBehaviour
         else
             Destroy(this.gameObject);
     }
+    private void Start()
+    {
+        CompleteList(50);
+    }
     public void CompleteList(int count)
     {
         for (int i = 0; i < count; i++)
