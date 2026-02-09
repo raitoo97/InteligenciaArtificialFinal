@@ -10,6 +10,7 @@ public class Boid : Agent , IFlockingSeparation
     private FSM _fsm;
     [Header("BoidConfig")]
     [SerializeField]public List<Boid> _neigboards = new List<Boid>();
+    private List<Vector3> _currentPath = new List<Vector3>();
     public TypeBoid typeBoid;
     public float weightSeparation;
     public float leaderSeparationWeight;
@@ -24,7 +25,7 @@ public class Boid : Agent , IFlockingSeparation
     private void OnEnable()
     {
         _fsm = new FSM();
-        _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,this,_fsm));
+        _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
         _fsm.AddState(FSM.State.Attack, new AttackBoidState(this,this));
         _life = new Life(_maxLife);
@@ -146,6 +147,27 @@ public class Boid : Agent , IFlockingSeparation
         float dist = Vector3.Distance(this.transform.position, _leaderRef.transform.position);
         return dist < radiusSeparation;
     }
+    public void MoveAlongPath()
+    {
+        if (_currentPath.Count == 0) return;
+        var target = _currentPath[0];
+        var dir = target - this.transform.position;
+        RotateTo(dir);
+        ApplyArrive(target);
+        if (Vector3.Distance(this.transform.position, target) < 1.5f)
+            _currentPath.RemoveAt(0);
+    }
+    public void GoDirectToTarget(Vector3 target)
+    {
+        _currentPath.Clear();
+        _currentPath.Add(target);
+    }
+    public void CalculatePathToTarget(Vector3 target)
+    {
+        _currentPath.Clear();
+        var path = PathFinding.CalculateTheta(this.transform.position, target);
+        _currentPath.AddRange(path);
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -169,4 +191,5 @@ public class Boid : Agent , IFlockingSeparation
     }
     public Leader Leader { get => _leaderRef; }
     public Life Life { get => _life; }
+    public List<Vector3> GetPath { get => _currentPath; }
 }

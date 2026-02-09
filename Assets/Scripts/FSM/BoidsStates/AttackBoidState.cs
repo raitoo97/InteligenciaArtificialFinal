@@ -46,9 +46,9 @@ public class AttackBoidState : IState
         {
             bool hasLOS = LineOfSight.IsOnSight(_boid.transform.position,_target.position);
             if (hasLOS)
-            {
-                _agent.ApplySeek(_target.position);
-            }
+                _boid.GoDirectToTarget(_target.position);
+            else
+                _boid.CalculatePathToTarget(_target.position);
             return;
         }
         else
