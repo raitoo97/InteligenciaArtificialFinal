@@ -16,6 +16,8 @@ public class Boid : Agent , IFlockingSeparation
     [SerializeField]private Leader _leaderRef;
     [Range(0f, 5f)] public float radiusSeparation;
     [Range(0f, 4f)] public  float _distanceToLeader;
+    [SerializeField] private float _life;
+    [Header("FOV")]
     [SerializeField] private float _viewRadius;
     [SerializeField] private float _viewAngle;
     private void OnEnable()

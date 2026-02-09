@@ -5,9 +5,11 @@ public class Leader : Agent
     private FSM _fsm;
     [Header("LeaderConfig")]
     [SerializeField]private bool _isVioletLeader;
+    [SerializeField] private float _life;
     [Header("MoveState")]
     [SerializeField][Range(0,3)]private float _nearDistance;
     private List<Vector3> _mainPath = new List<Vector3>();
+    [Header("FOV")]
     [SerializeField]private float _viewRadius;
     [SerializeField]private float _viewAngle;
     private void OnEnable()
