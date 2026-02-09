@@ -19,7 +19,6 @@ public class Life
     {
         _life -= damage;
         CheckLife();
-        Debug.Log($"Vida actual: {_life}");
     }
     public float GetLife { get => _life; }
 }

@@ -3,29 +3,31 @@ public class AttackBoidState : IState
 {
     private Boid _boid;
     private Agent _agent;
+    private FSM _fsm;
     private Transform _target;
     private float _attackRange = 10f;
-    private float _minDistance = 3f;
     private float _maxCooldown;
     private float _currentCooldown;
     private bool _hasNeighbors;
     private bool _isStopped;
-    public AttackBoidState(Boid boid,Agent agent)
+    public AttackBoidState(Boid boid,Agent agent,FSM fsm)
     {
         _agent = agent;
         _boid = boid;
+        _fsm = fsm;
     }
     public void OnEnter()
     {
         _target = FindTarget();
         _maxCooldown = 3;
         _isStopped = false;
+        _boid.ClearPath();
         Debug.Log("Boid enter attack");
     }
     public void OnExit()
     {
         _agent.ChangeMove(true);
-        Debug.Log("EXIT Attack");
+        _boid.ClearPath();
     }
     public void OnUpdate()
     {
@@ -33,45 +35,47 @@ public class AttackBoidState : IState
         {
             _target = FindTarget();
             if (_target == null)
+            {
+                _fsm.ChangeState(FSM.State.SearchEnemy);
                 return;
+            }
+
         }
         Vector3 dir = _target.position - _boid.transform.position;
         var dist = dir.magnitude;
-        if (dist < _minDistance)
+        if (_boid.GetPath.Count > 0)
         {
-            _agent.ApplyFlee(_target.position);
+            _boid.MoveAlongPath();
+            return;
+        }
+        bool hasLOS = LineOfSight.IsOnSight(_boid.transform.position,_target.position);
+        if (!hasLOS)
+        {
+            _boid.CalculatePathToTarget(_target.position);
             return;
         }
         if (dist > _attackRange)
         {
-            bool hasLOS = LineOfSight.IsOnSight(_boid.transform.position,_target.position);
-            if (hasLOS)
-                _boid.GoDirectToTarget(_target.position);
-            else
-                _boid.CalculatePathToTarget(_target.position);
+            _boid.GoDirectToTarget(_target.position);
             return;
         }
-        else
+        bool leaderTooClose = _boid.HasLeaderTooClose();
+        _boid.CheckHasNeighbors(ref _hasNeighbors);
+        bool shouldMove = _hasNeighbors || leaderTooClose;
+        if (shouldMove && _isStopped)
         {
-            bool leaderTooClose = _boid.HasLeaderTooClose();
-            _boid.CheckHasNeighbors(ref _hasNeighbors);
-            bool shouldMove = _hasNeighbors || leaderTooClose;
-            if (shouldMove && _isStopped)
-            {
-                _agent.ChangeMove(true);
-                _isStopped = false;
-            }
-            else if (!shouldMove && !_isStopped)
-            {
-                _agent.ChangeMove(false);
-                _isStopped = true;
-            }
-            if (shouldMove)
-            {
-                _boid.ApplySeparation();
-            }
+            _agent.ChangeMove(true);
+            _isStopped = false;
         }
-        _boid.RotateTo(dir);
+        else if (!shouldMove && !_isStopped)
+        {
+            _agent.ChangeMove(false);
+            _isStopped = true;
+        }
+        if (shouldMove)
+            _boid.ApplySeparation();
+        if (dir.sqrMagnitude > 0.001f)
+            _boid.RotateTo(dir);
         TryShoot();
     }
     private Transform FindTarget()

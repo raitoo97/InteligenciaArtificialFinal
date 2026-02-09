@@ -43,7 +43,10 @@ public abstract class Agent : MonoBehaviour
     }
     protected Vector3 Flee(Vector3 target)
     {
-        return -Seek(target);
+        var desired = (transform.position - target).normalized * _maxSpeed;
+        var steering = desired - _velocity;
+        steering = Vector3.ClampMagnitude(steering, _maxForce);
+        return steering;
     }
     public void ApplyArrive(Vector3 target)
     {
@@ -60,6 +63,10 @@ public abstract class Agent : MonoBehaviour
     public void ChangeMove(bool canMove)
     {
         _canMove = canMove;
+        if (!canMove)
+        {
+            _velocity = Vector3.zero;
+        }
     }
     public Vector3 Velocity { get => _velocity; }
     public float MaxSpeed { get => _maxSpeed; }

@@ -27,7 +27,8 @@ public class Boid : Agent , IFlockingSeparation
         _fsm = new FSM();
         _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
-        _fsm.AddState(FSM.State.Attack, new AttackBoidState(this,this));
+        _fsm.AddState(FSM.State.Attack, new AttackBoidState(this,this,_fsm));
+        _fsm.AddState(FSM.State.SearchEnemy, new SearchEnemyBoidState(this,this,_fsm));
         _life = new Life(_maxLife);
     }
     protected override void Start()
@@ -159,14 +160,18 @@ public class Boid : Agent , IFlockingSeparation
     }
     public void GoDirectToTarget(Vector3 target)
     {
-        _currentPath.Clear();
+        ClearPath();
         _currentPath.Add(target);
     }
     public void CalculatePathToTarget(Vector3 target)
     {
-        _currentPath.Clear();
+        ClearPath();
         var path = PathFinding.CalculateTheta(this.transform.position, target);
         _currentPath.AddRange(path);
+    }
+    public void ClearPath()
+    {
+        _currentPath.Clear();
     }
     private void OnDrawGizmos()
     {
@@ -186,10 +191,12 @@ public class Boid : Agent , IFlockingSeparation
         _fsm.RemoveState(FSM.State.Idle);
         _fsm.RemoveState(FSM.State.Move);
         _fsm.RemoveState(FSM.State.Attack);
+        _fsm.RemoveState(FSM.State.SearchEnemy);
         _fsm = null;
         _life = null;
     }
     public Leader Leader { get => _leaderRef; }
     public Life Life { get => _life; }
     public List<Vector3> GetPath { get => _currentPath; }
+    public float ViewRadius { get => _viewRadius; }
 }
