@@ -168,4 +168,5 @@ public class Boid : Agent , IFlockingSeparation
         _life = null;
     }
     public Leader Leader { get => _leaderRef; }
+    public Life Life { get => _life; }
 }

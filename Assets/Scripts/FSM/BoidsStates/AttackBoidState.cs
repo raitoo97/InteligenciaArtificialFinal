@@ -5,8 +5,8 @@ public class AttackBoidState : IState
     private Agent _agent;
     private Transform _target;
     private float _attackRange = 10f;
-    private float _fireRate = 1f;
-    private float _nextFireTime;
+    private float _maxCooldown;
+    private float _currentCooldown;
     private bool _hasNeighbors;
     private bool _isStopped;
     public AttackBoidState(Boid boid,Agent agent)
@@ -17,7 +17,8 @@ public class AttackBoidState : IState
     public void OnEnter()
     {
         _target = FindTarget();
-        _nextFireTime = Time.time;
+        _maxCooldown = 1;
+        _currentCooldown = _maxCooldown;
         _isStopped = false;
     }
     public void OnExit()
@@ -84,9 +85,16 @@ public class AttackBoidState : IState
     }
     private void TryShoot()
     {
-        if (Time.time < _nextFireTime)
-            return;
-        _nextFireTime = Time.time + _fireRate;
-        Debug.Log("Boid dispara");
+        if (_currentCooldown <= 0)
+        {
+            var Go = PoolBullet.instance.GetBullet();
+            Go.transform.position = _boid.transform.position;
+            Go.transform.rotation = _boid.transform.rotation;
+            _currentCooldown = _maxCooldown;
+        }
+        else
+        {
+            _currentCooldown -= Time.deltaTime;
+        }
     }
 }
