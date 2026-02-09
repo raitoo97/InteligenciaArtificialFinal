@@ -5,6 +5,7 @@ public class AttackBoidState : IState
     private Agent _agent;
     private Transform _target;
     private float _attackRange = 10f;
+    private float _minDistance = 3f;
     private float _maxCooldown;
     private float _currentCooldown;
     private bool _hasNeighbors;
@@ -17,7 +18,7 @@ public class AttackBoidState : IState
     public void OnEnter()
     {
         _target = FindTarget();
-        _maxCooldown = 1;
+        _maxCooldown = 3;
         _currentCooldown = _maxCooldown;
         _isStopped = false;
     }
@@ -35,7 +36,11 @@ public class AttackBoidState : IState
         }
         Vector3 dir = _target.position - _boid.transform.position;
         var dist = dir.magnitude;
-        _boid.RotateTo(dir);
+        if (dist < _minDistance)
+        {
+            _agent.ApplyFlee(_target.position);
+            return;
+        }
         if (dist > _attackRange)
         {
             _agent.ApplySeek(_target.position);
@@ -61,6 +66,7 @@ public class AttackBoidState : IState
                 _boid.ApplySeparation();
             }
         }
+        _boid.RotateTo(dir);
         TryShoot();
     }
     private Transform FindTarget()
@@ -87,9 +93,10 @@ public class AttackBoidState : IState
     {
         if (_currentCooldown <= 0)
         {
-            var Go = PoolBullet.instance.GetBullet();
-            Go.transform.position = _boid.transform.position;
-            Go.transform.rotation = _boid.transform.rotation;
+            var bullet = PoolBullet.instance.GetBullet();
+            bullet.transform.position = _boid.transform.position;
+            bullet.transform.rotation = _boid.transform.rotation;
+            bullet.GetComponent<Bullet>().Shoot(_boid.typeBoid);
             _currentCooldown = _maxCooldown;
         }
         else

@@ -8,14 +8,16 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField]private float speed;
     public BulletType bulletType;
-    private void OnEnable()
+    private Renderer _renderer;
+    private void Awake()
     {
-        Invoke("DesactivateBullet", 5);
-        var renderer = GetComponent<Renderer>();
-        if (bulletType == BulletType.Blue)
-            renderer.material.color = Color.blue;
-        else
-            renderer.material.color = Color.magenta;
+        _renderer = GetComponent<Renderer>();
+    }
+    public void Shoot(TypeBoid shooterTeam)
+    {
+        bulletType = (shooterTeam == TypeBoid.BlueTeam) ? BulletType.Blue : BulletType.Violet;
+        _renderer.material.color = (bulletType == BulletType.Blue) ? Color.blue : Color.magenta;
+        Invoke("DesactivateBullet", 5f);
     }
     private void OnTriggerEnter(Collider other)
     {

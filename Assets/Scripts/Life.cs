@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.UI;
 public class Life
 {
     private float _life;
+    private Slider _slider;
     public Life(float life)
     {
         _life = life;
