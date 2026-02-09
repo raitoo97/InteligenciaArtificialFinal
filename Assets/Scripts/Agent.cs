@@ -45,6 +45,10 @@ public abstract class Agent : MonoBehaviour
     {
         AddForce(Arrive(target));
     }
+    public void ApplySeek(Vector3 target)
+    {
+        AddForce(Seek(target));
+    }
     public void ChangeMove(bool canMove)
     {
         _canMove = canMove;

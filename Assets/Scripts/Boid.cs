@@ -147,4 +147,5 @@ public class Boid : Agent , IFlockingSeparation
         _fsm = null;
         _life = null;
     }
+    public Leader Leader { get => _leaderRef; }
 }
