@@ -26,7 +26,7 @@ public class Boid : Agent , IFlockingSeparation
         _fsm = new FSM();
         _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,this,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
-        _fsm.AddState(FSM.State.Attack, new AttackBoidState(this));
+        _fsm.AddState(FSM.State.Attack, new AttackBoidState(this,this));
         _life = new Life(_maxLife);
     }
     protected override void Start()
@@ -125,6 +125,26 @@ public class Boid : Agent , IFlockingSeparation
             }
         }
         _leaderRef.ForceAttack();
+    }
+    public void CheckHasNeighbors(ref bool _hasNeighbors)
+    {
+        _hasNeighbors = false;
+        foreach (var boid in _neigboards)
+        {
+            if (boid == this) continue;
+            float dist = Vector3.Distance(this.transform.position, boid.transform.position);
+            if (dist < radiusSeparation)
+            {
+                _hasNeighbors = true;
+                return;
+            }
+        }
+    }
+    public bool HasLeaderTooClose()
+    {
+        if (_leaderRef == null) return false;
+        float dist = Vector3.Distance(this.transform.position, _leaderRef.transform.position);
+        return dist < radiusSeparation;
     }
     private void OnDrawGizmos()
     {

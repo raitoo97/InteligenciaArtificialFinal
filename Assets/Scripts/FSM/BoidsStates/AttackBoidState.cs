@@ -7,13 +7,18 @@ public class AttackBoidState : IState
     private float _attackRange = 10f;
     private float _fireRate = 1f;
     private float _nextFireTime;
-    public AttackBoidState(Agent agent)
+    private bool _hasNeighbors;
+    private bool _isStopped;
+    public AttackBoidState(Boid boid,Agent agent)
     {
         _agent = agent;
+        _boid = boid;
     }
     public void OnEnter()
     {
         _target = FindTarget();
+        _nextFireTime = Time.time;
+        _isStopped = false;
     }
     public void OnExit()
     {
@@ -37,7 +42,23 @@ public class AttackBoidState : IState
         }
         else
         {
-            _agent.ChangeMove(false);
+            bool leaderTooClose = _boid.HasLeaderTooClose();
+            _boid.CheckHasNeighbors(ref _hasNeighbors);
+            bool shouldMove = _hasNeighbors || leaderTooClose;
+            if (shouldMove && _isStopped)
+            {
+                _agent.ChangeMove(true);
+                _isStopped = false;
+            }
+            else if (!shouldMove && !_isStopped)
+            {
+                _agent.ChangeMove(false);
+                _isStopped = true;
+            }
+            if (shouldMove)
+            {
+                _boid.ApplySeparation();
+            }
         }
         TryShoot();
     }
@@ -47,9 +68,10 @@ public class AttackBoidState : IState
         if(chance < 0.5f)
         {
             var enemyLeader = LeaderManager.instance.GetLeader(_boid.Leader);
-            var isOnSight = LineOfSight.IsOnSight(_boid.transform.position, enemyLeader.transform.position);
-            if (enemyLeader != null && isOnSight)
+            if (enemyLeader != null &&LineOfSight.IsOnSight(_boid.transform.position, enemyLeader.transform.position))
+            {
                 return enemyLeader.transform;
+            }
         }
         var allBoids = BoidManager.instance.GetBoids;
         foreach (var boid in allBoids)
