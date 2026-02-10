@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour
     {
         bulletType = (shooterTeam == TypeBoid.BlueTeam) ? BulletType.Blue : BulletType.Violet;
         _renderer.material.color = (bulletType == BulletType.Blue) ? Color.blue : Color.magenta;
+        CancelInvoke("DesactivateBullet");
         Invoke("DesactivateBullet", 5f);
     }
     private void OnTriggerEnter(Collider other)
