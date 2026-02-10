@@ -51,9 +51,10 @@ public class Boid : Agent , IFlockingSeparation
         var desired = Vector3.zero;
         foreach(var boid in boids)
         {
+            if (boid == null) continue;
             var direction = this.transform.position - boid.transform.position;
             var distance = direction.magnitude;
-            if (distance > range || boid == this || boid == null) continue;
+            if (distance > range || boid == this) continue;
             desired += direction;
         }
         if (desired == Vector3.zero)
