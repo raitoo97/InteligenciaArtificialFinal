@@ -149,7 +149,10 @@ public class Boid : Agent , IFlockingSeparation
                 boid.ForceAttack();
             }
         }
-        _leaderRef.ForceAttack();
+        if (_leaderRef != null)
+        {
+            _leaderRef.ForceAttack();
+        }
     }
     public void CheckHasNeighbors(ref bool _hasNeighbors)
     {
