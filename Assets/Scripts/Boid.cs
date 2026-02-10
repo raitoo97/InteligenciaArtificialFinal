@@ -53,7 +53,7 @@ public class Boid : Agent , IFlockingSeparation
         {
             var direction = this.transform.position - boid.transform.position;
             var distance = direction.magnitude;
-            if (distance > range || boid == this) continue;
+            if (distance > range || boid == this || boid == null) continue;
             desired += direction;
         }
         if (desired == Vector3.zero)
