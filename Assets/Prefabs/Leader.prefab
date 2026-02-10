@@ -266,6 +266,37 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &3296912099005851575
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8204835755656157039}
+  m_Layer: 10
+  m_Name: GunSight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8204835755656157039
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3296912099005851575}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.265, z: 0.64}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8203259677889813518}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4913817274774670517
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,6 +550,7 @@ Transform:
   m_Children:
   - {fileID: 1033084442267531055}
   - {fileID: 3452070797022500660}
+  - {fileID: 8204835755656157039}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6083618308490591262
@@ -614,6 +646,7 @@ MonoBehaviour:
   _isVioletLeader: 0
   _maxLife: 100
   _slider: {fileID: 2696242135880295471}
+  _gunSight: {fileID: 8204835755656157039}
   _nearDistance: 1.5
   _viewRadius: 6
   _viewAngle: 90

@@ -25,6 +25,7 @@ public class AttackBoidState : IState
     {
         _target = FindTarget();
         _maxCooldown = 3;
+        _currentCooldown = Time.time;
         _isStopped = false;
         _boid.ClearPath();
         _agent.ChangeMove(true);

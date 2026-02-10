@@ -7,7 +7,8 @@ public class Leader : Agent
     [Header("LeaderConfig")]
     [SerializeField]private bool _isVioletLeader;
     [SerializeField]private float _maxLife;
-    [SerializeField] private Slider _slider;
+    [SerializeField]private Slider _slider;
+    [SerializeField]private Transform _gunSight;
     private Life _life;
     [Header("MoveState")]
     [SerializeField][Range(0,3)]private float _nearDistance;
@@ -21,7 +22,7 @@ public class Leader : Agent
         _fsm = new FSM();
         _fsm.AddState(FSM.State.Move, new MoveLeaderState(this.transform, _nearDistance,this,_mainPath,this,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleLeaderState(this,_mainPath, this, _fsm));
-        _fsm.AddState(FSM.State.Attack, new AttackLeaderState(this));
+        _fsm.AddState(FSM.State.Attack, new AttackLeaderState(this,this ,_gunSight));
         _life = new Life(this.gameObject,_maxLife, _slider);
     }
     protected override void Start()
