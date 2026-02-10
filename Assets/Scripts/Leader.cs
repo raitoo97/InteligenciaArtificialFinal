@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 public class Leader : Agent
 {
     private FSM _fsm;
     [Header("LeaderConfig")]
     [SerializeField]private bool _isVioletLeader;
     [SerializeField]private float _maxLife;
+    [SerializeField] private Slider _slider;
     private Life _life;
     [Header("MoveState")]
     [SerializeField][Range(0,3)]private float _nearDistance;
@@ -20,7 +22,7 @@ public class Leader : Agent
         _fsm.AddState(FSM.State.Move, new MoveLeaderState(this.transform, _nearDistance,this,_mainPath,this,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleLeaderState(this,_mainPath, this, _fsm));
         _fsm.AddState(FSM.State.Attack, new AttackLeaderState(this));
-        _life = new Life(_maxLife);
+        _life = new Life(this.gameObject,_maxLife, _slider);
     }
     protected override void Start()
     {
@@ -152,8 +154,10 @@ public class Leader : Agent
         _fsm.RemoveState(FSM.State.Idle);
         _fsm.RemoveState(FSM.State.Move);
         _fsm.RemoveState(FSM.State.Attack);
+        LeaderManager.instance.Remove(this);
         _fsm = null;
         _life = null;
     }
     public bool IsVioletLeader { get => _isVioletLeader; }
+    public Life Life { get => _life; }
 }

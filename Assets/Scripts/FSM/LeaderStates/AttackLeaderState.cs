@@ -11,7 +11,6 @@ public class AttackLeaderState : IState
         _agent.ChangeMove(false);
         Debug.Log("Leader enter attack");
     }
-
     public void OnExit()
     {
          _agent.ChangeMove(true);

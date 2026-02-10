@@ -17,20 +17,24 @@ public class IdleBoidState : IState
     public void OnEnter()
     {
         _isStopped = false;
-        CheckHasNeighbors();
+        _boid.ResetAlert();
+        _boid.CheckHasNeighbors(ref _hasNeighbors);
     }
     public void OnUpdate()
     {
         if (_boid.DetectEnemy())
+        {
+            _fsm.ChangeState(FSM.State.Attack);
             return;
+        }
         var distance = Vector3.Distance(_boid.transform.position, _leader.transform.position);
         if (distance > _boid._distanceToLeader)
         {
             _fsm.ChangeState(FSM.State.Move);
             return;
         }
-        CheckHasNeighbors();
-        bool leaderTooClose = HasLeaderTooClose();
+        _boid.CheckHasNeighbors(ref _hasNeighbors);
+        bool leaderTooClose = _boid.HasLeaderTooClose();
         bool shouldMove = _hasNeighbors || leaderTooClose;
         if (shouldMove && _isStopped)
         {
@@ -50,25 +54,5 @@ public class IdleBoidState : IState
     public void OnExit()
     {
         _agent.ChangeMove(true);
-    }
-    private void CheckHasNeighbors()
-    {
-        _hasNeighbors = false;
-        foreach (var boid in _boid._neigboards)
-        {
-            if (boid == _boid) continue;
-            float dist = Vector3.Distance(_boid.transform.position, boid.transform.position);
-            if (dist < _boid.radiusSeparation)
-            {
-                _hasNeighbors = true;
-                return;
-            }
-        }
-    }
-    private bool HasLeaderTooClose()
-    {
-        if (_leader == null) return false;
-        float dist = Vector3.Distance(_boid.transform.position,_leader.transform.position);
-        return dist < _boid.radiusSeparation;
     }
 }

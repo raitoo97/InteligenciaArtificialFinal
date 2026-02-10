@@ -14,8 +14,8 @@ TagManager:
   - Floor
   - Wall
   - ObstacleAvoidance
-  - 
-  - 
+  - Boid
+  - Leader
   - 
   - 
   - 

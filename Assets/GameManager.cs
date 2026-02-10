@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     private List<Boid> boids = new List<Boid>();
     [Range(0f, 2f)]public float weightSeparation;
     [Range(0f, 1f)] public float weightSeparationLeader;
-
+    [Range(0f, 2f)] public float weightSeparationEnemy;
     private void Awake()
     {
         if (instance == null)
@@ -31,6 +31,21 @@ public class GameManager : MonoBehaviour
                 boid._neigboards = violetBoids;
             boid.weightSeparation = weightSeparation;
             boid.leaderSeparationWeight = weightSeparationLeader;
+            boid.enemySeparationWeight = weightSeparationEnemy;
+        }
+    }
+    public void UpdateAllNeighbors()
+    {
+        var allBoids = BoidManager.instance.GetBoids;
+        var blueBoids = allBoids.FindAll(b => b != null && b.typeBoid == TypeBoid.BlueTeam);
+        var violetBoids = allBoids.FindAll(b => b != null && b.typeBoid == TypeBoid.VioletTeam);
+        foreach (var boid in allBoids)
+        {
+            if (boid == null) continue;
+            if (boid.typeBoid == TypeBoid.BlueTeam)
+                boid._neigboards = new List<Boid>(blueBoids);
+            else
+                boid._neigboards = new List<Boid>(violetBoids);
         }
     }
 }
