@@ -159,4 +159,5 @@ public class Leader : Agent
         _life = null;
     }
     public bool IsVioletLeader { get => _isVioletLeader; }
+    public Life Life { get => _life; }
 }

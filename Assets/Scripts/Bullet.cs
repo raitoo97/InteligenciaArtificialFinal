@@ -27,7 +27,17 @@ public class Bullet : MonoBehaviour
             if (boid == null) return;
             if ((bulletType == BulletType.Blue && boid.typeBoid == TypeBoid.VioletTeam) ||(bulletType == BulletType.Violet && boid.typeBoid == TypeBoid.BlueTeam))
             {
-                boid.Life.TakeDamage(10); // ejemplo de daño
+                boid.Life.TakeDamage(10);
+                DesactivateBullet();
+            }
+        }
+        if (other.gameObject.layer == 10)
+        {
+            var leader = other.GetComponent<Leader>();
+            if (leader == null) return;
+            if ((bulletType == BulletType.Blue && leader.IsVioletLeader) || (bulletType == BulletType.Violet && !leader.IsVioletLeader))
+            {
+                leader.Life.TakeDamage(10);
                 DesactivateBullet();
             }
         }
