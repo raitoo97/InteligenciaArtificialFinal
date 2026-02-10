@@ -48,7 +48,8 @@ public class SearchEnemyBoidState : IState
             _boid.MoveAlongPath();
             return;
         }
-        _boid.CalculatePathToTarget(_target.position);
+        if (_target != null)
+            _boid.CalculatePathToTarget(_target.position);
     }
     private Transform ChooseRandomEnemy()
     {
