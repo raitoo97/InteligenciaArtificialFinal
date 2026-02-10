@@ -98,11 +98,14 @@ public class Boid : Agent , IFlockingSeparation
     {
         if (_alreadyAlerted) return true;
         var enemyLeader = LeaderManager.instance.GetLeader(_leaderRef);
-        if (enemyLeader != null && FOV.InFieldOfView(enemyLeader.transform, this.transform, _viewRadius, _viewAngle))
+        if (enemyLeader != null)
         {
-            AlertAllies();
-            _alreadyAlerted = true;
-            return true;
+            if(FOV.InFieldOfView(enemyLeader.transform, this.transform, _viewRadius, _viewAngle))
+            {
+                AlertAllies();
+                _alreadyAlerted = true;
+                return true;
+            }
         }
         var allBoids = BoidManager.instance.GetBoids;
         List<Boid> enemyBoids;

@@ -96,9 +96,10 @@ public class AttackBoidState : IState
         if(chance < 0.5f)
         {
             var enemyLeader = LeaderManager.instance.GetLeader(_boid.Leader);
-            if (enemyLeader != null &&LineOfSight.IsOnSight(_boid.transform.position, enemyLeader.transform.position))
+            if (enemyLeader != null)
             {
-                return enemyLeader.transform;
+                if(LineOfSight.IsOnSight(_boid.transform.position, enemyLeader.transform.position))
+                    return enemyLeader.transform;
             }
         }
         var allBoids = BoidManager.instance.GetBoids;

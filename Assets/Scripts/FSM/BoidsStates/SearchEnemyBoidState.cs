@@ -59,9 +59,14 @@ public class SearchEnemyBoidState : IState
             if (boid.typeBoid != _boid.typeBoid)
                 enemies.Add(boid);
         }
-        if (enemies.Count == 0)
-            return null;
-        int index = Random.Range(0, enemies.Count);
-        return enemies[index].transform;
+        if (enemies.Count > 0)
+        {
+            int index = Random.Range(0, enemies.Count);
+            return enemies[index].transform;
+        }
+        var enemyLeader = LeaderManager.instance.GetLeader(_boid.Leader);
+        if (enemyLeader != null)
+            return enemyLeader.transform;
+        return null;
     }
 }
