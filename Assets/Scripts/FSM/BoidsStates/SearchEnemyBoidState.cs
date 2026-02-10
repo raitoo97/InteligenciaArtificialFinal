@@ -24,7 +24,6 @@ public class SearchEnemyBoidState : IState
     public void OnExit()
     {
         _boid.ClearPath();
-        _agent.ChangeMove(true);
     }
     public void OnUpdate()
     {

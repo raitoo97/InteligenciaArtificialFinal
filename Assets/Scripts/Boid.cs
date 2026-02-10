@@ -10,7 +10,7 @@ public class Boid : Agent , IFlockingSeparation
 {
     private FSM _fsm;
     [Header("BoidConfig")]
-    [SerializeField]public List<Boid> _neigboards = new List<Boid>();
+    public List<Boid> _neigboards = new List<Boid>();
     private List<Vector3> _currentPath = new List<Vector3>();
     public TypeBoid typeBoid;
     [SerializeField]private Transform _gunSight;
@@ -188,6 +188,7 @@ public class Boid : Agent , IFlockingSeparation
     public void MoveAlongPath()
     {
         if (_currentPath.Count == 0) return;
+        ChangeMove(true);
         var target = _currentPath[0];
         var dir = target - this.transform.position;
         RotateTo(dir);
