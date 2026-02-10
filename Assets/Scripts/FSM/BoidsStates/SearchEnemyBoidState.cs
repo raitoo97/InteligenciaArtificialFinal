@@ -37,9 +37,10 @@ public class SearchEnemyBoidState : IState
             }
             return;
         }
-        if (_boid.DetectEnemy())
+        var visibleEnemy = _boid.GetClosestVisibleEnemy();
+        if (visibleEnemy != null)
         {
-            _boid.ClearPath(); // limpio el path si estaba en camino
+            _boid.ClearPath();
             _fsm.ChangeState(FSM.State.Attack);
             return;
         }

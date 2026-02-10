@@ -28,7 +28,6 @@ public class AttackLeaderState : IState
         _agent.ChangeMove(true);
         Debug.Log("Leader exit attack");
     }
-
     public void OnUpdate()
     {
         if (_target == null)
