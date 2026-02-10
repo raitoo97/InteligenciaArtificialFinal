@@ -50,7 +50,13 @@ public class SearchEnemyBoidState : IState
             return;
         }
         if (_target != null)
-            _boid.CalculatePathToTarget(_target.position);
+        {
+            var isOnSight = LineOfSight.IsOnSight(_boid.transform.position, _target.position);
+            if(isOnSight)
+                _boid.GoDirectToTarget(_target.position);
+            else
+                _boid.CalculatePathToTarget(_target.position);
+        }
     }
     private Transform ChooseRandomEnemy()
     {
