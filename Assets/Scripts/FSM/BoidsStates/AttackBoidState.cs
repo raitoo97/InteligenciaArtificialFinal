@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 public class AttackBoidState : IState
 {
@@ -101,12 +102,18 @@ public class AttackBoidState : IState
             }
         }
         var allBoids = BoidManager.instance.GetBoids;
+        List<Boid> visibleEnemies = new List<Boid>();
         foreach (var boid in allBoids)
         {
             if (boid == null) continue;
             if (!LineOfSight.IsOnSight(_boid.transform.position, boid.transform.position)) continue;
-            if (boid.typeBoid != _boid.typeBoid)
-                return boid.transform;
+            if (boid.typeBoid == _boid.typeBoid) continue;
+            visibleEnemies.Add(boid);
+        }
+        if (visibleEnemies.Count > 0)
+        {
+            int index = Random.Range(0, visibleEnemies.Count);
+            return visibleEnemies[index].transform;
         }
         return null;
     }
