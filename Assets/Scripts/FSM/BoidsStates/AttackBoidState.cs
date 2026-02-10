@@ -27,7 +27,7 @@ public class AttackBoidState : IState
         _maxCooldown = 3;
         _isStopped = false;
         _boid.ClearPath();
-        Debug.Log("Boid enter attack");
+        _agent.ChangeMove(true);
     }
     public void OnExit()
     {

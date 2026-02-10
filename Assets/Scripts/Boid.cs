@@ -230,6 +230,7 @@ public class Boid : Agent , IFlockingSeparation
         _fsm.RemoveState(FSM.State.Attack);
         _fsm.RemoveState(FSM.State.SearchEnemy);
         BoidManager.instance.RemoveBoid(this);
+        GameManager.instance.UpdateAllNeighbors();
         _fsm = null;
         _life = null;
     }

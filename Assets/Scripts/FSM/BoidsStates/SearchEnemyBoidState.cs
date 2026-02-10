@@ -16,7 +16,6 @@ public class SearchEnemyBoidState : IState
     }
     public void OnEnter()
     {
-        Debug.Log("Boid enter search");
         _target = ChooseRandomEnemy();
         _searchTimer = _searchInterval;
         _boid.ClearPath();
@@ -25,6 +24,7 @@ public class SearchEnemyBoidState : IState
     public void OnExit()
     {
         _boid.ClearPath();
+        _agent.ChangeMove(true);
     }
     public void OnUpdate()
     {
@@ -55,6 +55,7 @@ public class SearchEnemyBoidState : IState
         List<Boid> enemies = new List<Boid>();
         foreach (var boid in BoidManager.instance.GetBoids)
         {
+            if (boid == null) continue;
             if (boid.typeBoid != _boid.typeBoid)
                 enemies.Add(boid);
         }
