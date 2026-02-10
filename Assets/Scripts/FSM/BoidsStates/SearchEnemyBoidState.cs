@@ -37,14 +37,15 @@ public class SearchEnemyBoidState : IState
             }
             return;
         }
+        if (_boid.DetectEnemy())
+        {
+            _boid.ClearPath(); // limpio el path si estaba en camino
+            _fsm.ChangeState(FSM.State.Attack);
+            return;
+        }
         if (_boid.GetPath.Count > 0)
         {
             _boid.MoveAlongPath();
-            return;
-        }
-        if (LineOfSight.IsOnSight(_boid.transform.position, _target.position))
-        {
-            _fsm.ChangeState(FSM.State.Attack);
             return;
         }
         _boid.CalculatePathToTarget(_target.position);
