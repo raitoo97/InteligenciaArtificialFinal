@@ -20,6 +20,7 @@ public class MoveBoidState : IState
         {
             _boid.ClearPath();
             _fsm.ChangeState(FSM.State.Retreat);
+            return;
         }
         if (_boid.DetectEnemy())
         {

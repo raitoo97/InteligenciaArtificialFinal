@@ -26,6 +26,7 @@ public class IdleBoidState : IState
         {
             _boid.ClearPath();
             _fsm.ChangeState(FSM.State.Retreat);
+            return;
         }
         if (_boid.DetectEnemy())
         {

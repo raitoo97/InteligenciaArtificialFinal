@@ -56,4 +56,5 @@ public class Bullet : MonoBehaviour
     {
         this.gameObject.SetActive(false);
     }
+    public float GetSpeed { get => speed; }
 }

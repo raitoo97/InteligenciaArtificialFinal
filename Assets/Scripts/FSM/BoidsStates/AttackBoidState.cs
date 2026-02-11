@@ -13,6 +13,7 @@ public class AttackBoidState : IState
     private bool _leaderTooClose;
     private bool _hasEnemyNearby;
     private bool _isStopped;
+    private GameObject _bullet;
     public AttackBoidState(Transform gunSight,Boid boid,Agent agent,FSM fsm)
     {
         _agent = agent;
@@ -40,13 +41,13 @@ public class AttackBoidState : IState
         {
             _boid.ClearPath();
             _fsm.ChangeState(FSM.State.Retreat);
+            return;
         }
         if (_target == null)
         {
             _fsm.ChangeState(FSM.State.SearchEnemy);
             return;
         }
-        Vector3 dir = _target.position - _boid.transform.position;
         _leaderTooClose = _boid.HasLeaderTooClose();
         _boid.CheckHasNeighbors(ref _hasNeighbors);
         _boid.CheckHasEnemyNeighbors(ref _hasEnemyNearby, _shootRange);
@@ -75,8 +76,7 @@ public class AttackBoidState : IState
             _agent.ChangeMove(true);
             _isStopped = false;
         }
-        if (dir.sqrMagnitude > 0.001f)
-            _boid.RotateTo(dir);
+        RotateWhitPrediction(_target.GetComponent<Agent>());
         TryShoot();
     }
     private void TryShoot()
@@ -88,5 +88,17 @@ public class AttackBoidState : IState
         bullet.transform.rotation = _gunSight.rotation;
         bullet.GetComponent<Bullet>().Shoot(_boid.typeBoid);
         _currentCooldown = Time.time;
+    }
+    public void RotateWhitPrediction(Agent Target)
+    {
+        Vector3 dir = Target.transform.position - _boid.transform.position;
+        float predictionTime = 5;
+        Vector3 aim = Target.transform.position + Target.Velocity * predictionTime;
+        Vector3 directionToAim = (aim - _boid.transform.position).normalized;
+        if (directionToAim != Vector3.zero)
+        {
+            Quaternion desiredRot = Quaternion.LookRotation(directionToAim);
+            _boid.transform.rotation = Quaternion.Slerp(_boid.transform.rotation, desiredRot, 5 * Time.deltaTime);
+        }
     }
 }

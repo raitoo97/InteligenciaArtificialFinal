@@ -27,7 +27,6 @@ public class RetreatBoidState : IState
     public void OnExit()
     {
         _boid.ClearPath();
-        Debug.Log("Exiting Retreat State");
     }
     public void OnUpdate()
     {
