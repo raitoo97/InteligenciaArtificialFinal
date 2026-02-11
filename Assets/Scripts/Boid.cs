@@ -14,6 +14,7 @@ public class Boid : Agent , IFlockingSeparation
     private List<Vector3> _currentPath = new List<Vector3>();
     public TypeBoid typeBoid;
     [SerializeField]private Transform _gunSight;
+    [SerializeField]private GameObject _bulletRef;
     [SerializeField]private Slider _slider;
     public float weightSeparation;
     public float leaderSeparationWeight;
@@ -35,7 +36,7 @@ public class Boid : Agent , IFlockingSeparation
         _fsm = new FSM();
         _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
-        _fsm.AddState(FSM.State.Attack, new AttackBoidState(_gunSight, this,this,_fsm));
+        _fsm.AddState(FSM.State.Attack, new AttackBoidState(_gunSight, _bulletRef, this,this,_fsm));
         _fsm.AddState(FSM.State.SearchEnemy, new SearchEnemyBoidState(this,this,_fsm));
         _fsm.AddState(FSM.State.Retreat, new RetreatBoidState(this,this,_fsm));
         _life = new Life(this.gameObject,_maxLife, _slider);

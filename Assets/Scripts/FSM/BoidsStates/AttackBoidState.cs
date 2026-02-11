@@ -14,12 +14,15 @@ public class AttackBoidState : IState
     private bool _hasEnemyNearby;
     private bool _isStopped;
     private GameObject _bullet;
-    public AttackBoidState(Transform gunSight,Boid boid,Agent agent,FSM fsm)
+    private float _bulletSpeed;
+    public AttackBoidState(Transform gunSight,GameObject bullet,Boid boid,Agent agent,FSM fsm)
     {
         _agent = agent;
         _boid = boid;
         _fsm = fsm;
         _gunSight = gunSight;
+        _bullet = bullet;
+        _bulletSpeed = _bullet.GetComponent<Bullet>().GetSpeed;
     }
     public void OnEnter()
     {
@@ -92,13 +95,14 @@ public class AttackBoidState : IState
     public void RotateWhitPrediction(Agent Target)
     {
         Vector3 dir = Target.transform.position - _boid.transform.position;
-        float predictionTime = 5;
+        float distance = dir.magnitude;
+        float predictionTime = distance / _bulletSpeed;
         Vector3 aim = Target.transform.position + Target.Velocity * predictionTime;
         Vector3 directionToAim = (aim - _boid.transform.position).normalized;
         if (directionToAim != Vector3.zero)
         {
             Quaternion desiredRot = Quaternion.LookRotation(directionToAim);
-            _boid.transform.rotation = Quaternion.Slerp(_boid.transform.rotation, desiredRot, 5 * Time.deltaTime);
+            _boid.transform.rotation = Quaternion.RotateTowards(_boid.transform.rotation, desiredRot, 360f * Time.deltaTime);
         }
     }
 }
