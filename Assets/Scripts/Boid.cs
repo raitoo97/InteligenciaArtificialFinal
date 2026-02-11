@@ -25,6 +25,7 @@ public class Boid : Agent , IFlockingSeparation
     private Life _life;
     public Transform _blueSecurePlace;
     public Transform _violetSecurePlace;
+    [SerializeField]private float _minLifeToRetreat;
     [Header("FOV")]
     [SerializeField] private float _viewRadius;
     [SerializeField] private float _viewAngle;
@@ -271,4 +272,5 @@ public class Boid : Agent , IFlockingSeparation
     public Leader Leader { get => _leaderRef; }
     public Life Life { get => _life; }
     public List<Vector3> GetPath { get => _currentPath; }
+    public float MinLifeToRetreat { get => _minLifeToRetreat; }
 }

@@ -22,7 +22,7 @@ public class IdleBoidState : IState
     }
     public void OnUpdate()
     {
-        if (_boid.Life.GetLife < 30)
+        if (_boid.Life.GetLife < _boid.MinLifeToRetreat)
         {
             _boid.ClearPath();
             _fsm.ChangeState(FSM.State.Retreat);
