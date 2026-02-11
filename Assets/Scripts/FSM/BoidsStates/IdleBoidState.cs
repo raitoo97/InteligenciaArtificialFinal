@@ -22,6 +22,11 @@ public class IdleBoidState : IState
     }
     public void OnUpdate()
     {
+        if (_boid.Life.GetLife < 30)
+        {
+            _boid.ClearPath();
+            _fsm.ChangeState(FSM.State.Retreat);
+        }
         if (_boid.DetectEnemy())
         {
             _fsm.ChangeState(FSM.State.Attack);

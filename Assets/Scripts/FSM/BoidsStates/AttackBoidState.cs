@@ -36,6 +36,11 @@ public class AttackBoidState : IState
     }
     public void OnUpdate()
     {
+        if (_boid.Life.GetLife < 30)
+        {
+            _boid.ClearPath();
+            _fsm.ChangeState(FSM.State.Retreat);
+        }
         if (_target == null)
         {
             _fsm.ChangeState(FSM.State.SearchEnemy);

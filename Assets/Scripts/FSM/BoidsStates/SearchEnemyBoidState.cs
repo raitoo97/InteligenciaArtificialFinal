@@ -16,6 +16,7 @@ public class SearchEnemyBoidState : IState
     }
     public void OnEnter()
     {
+        Debug.Log("Entering Search Enemy State");
         _target = ChooseRandomEnemy();
         _searchTimer = _searchInterval;
         _boid.ClearPath();
@@ -27,6 +28,11 @@ public class SearchEnemyBoidState : IState
     }
     public void OnUpdate()
     {
+        if(_boid.Life.GetLife < 30)
+        {
+            _boid.ClearPath();
+            _fsm.ChangeState(FSM.State.Retreat);
+        }
         if (_target == null)
         {
             _searchTimer -= Time.deltaTime;

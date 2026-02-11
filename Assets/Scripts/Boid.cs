@@ -36,6 +36,7 @@ public class Boid : Agent , IFlockingSeparation
         _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
         _fsm.AddState(FSM.State.Attack, new AttackBoidState(_gunSight, this,this,_fsm));
         _fsm.AddState(FSM.State.SearchEnemy, new SearchEnemyBoidState(this,this,_fsm));
+        _fsm.AddState(FSM.State.Retreat, new RetreatBoidState(this,this,_fsm));
         _life = new Life(this.gameObject,_maxLife, _slider);
     }
     protected override void Start()
@@ -261,6 +262,7 @@ public class Boid : Agent , IFlockingSeparation
         _fsm.RemoveState(FSM.State.Move);
         _fsm.RemoveState(FSM.State.Attack);
         _fsm.RemoveState(FSM.State.SearchEnemy);
+        _fsm.RemoveState(FSM.State.Retreat);
         BoidManager.instance.RemoveBoid(this);
         GameManager.instance.UpdateAllNeighbors();
         _fsm = null;

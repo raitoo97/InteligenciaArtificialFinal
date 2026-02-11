@@ -11,11 +11,10 @@ public class RetreatBoidState : IState
         _fsm = fsm;
         _agent = agent;
     }
-
     public void OnEnter()
     {
         _boid.ClearPath();
-        _safeSpot = GetClosestSafeSpot();
+        _safeSpot = GetSafeSpot();
         _agent.ChangeMove(true);
         if (_safeSpot != null)
         {
@@ -28,18 +27,18 @@ public class RetreatBoidState : IState
     public void OnExit()
     {
         _boid.ClearPath();
+        Debug.Log("Exiting Retreat State");
     }
     public void OnUpdate()
     {
         if (_boid.GetPath.Count > 0)
         {
             _boid.MoveAlongPath();
-            _boid.ApplySeparation();
             return;
         }
-        _fsm.ChangeState(FSM.State.Attack);
+        _fsm.ChangeState(FSM.State.SearchEnemy);
     }
-    private Transform GetClosestSafeSpot()
+    private Transform GetSafeSpot()
     {
         _safeSpot = _boid.typeBoid == TypeBoid.BlueTeam ? _boid._blueSecurePlace : _boid._violetSecurePlace;
         return _safeSpot;

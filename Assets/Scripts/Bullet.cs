@@ -42,6 +42,11 @@ public class Bullet : MonoBehaviour
                 DesactivateBullet();
             }
         }
+        if(other.gameObject.layer == 7)//Wall
+        {
+            CancelInvoke("DesactivateBullet");
+            DesactivateBullet();
+        }
     }
     void Update()
     {
