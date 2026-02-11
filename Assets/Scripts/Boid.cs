@@ -23,6 +23,8 @@ public class Boid : Agent , IFlockingSeparation
     [Range(0f, 4f)] public  float _distanceToLeader;
     [SerializeField] private float _maxLife;
     private Life _life;
+    public Transform _blueSecurePlace;
+    public Transform _violetSecurePlace;
     [Header("FOV")]
     [SerializeField] private float _viewRadius;
     [SerializeField] private float _viewAngle;

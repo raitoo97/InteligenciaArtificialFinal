@@ -24,5 +24,12 @@ public class Life
         _slider.value = _life;
         CheckLife();
     }
+    public void Heal(float heal)
+    {
+        _life += heal;
+        if (_life > _slider.maxValue)
+            _life = _slider.maxValue;
+        _slider.value = _life;
+    }
     public float GetLife { get => _life; }
 }
