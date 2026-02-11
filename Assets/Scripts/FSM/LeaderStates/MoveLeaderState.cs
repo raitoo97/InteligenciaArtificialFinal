@@ -3,17 +3,11 @@ using UnityEngine;
 public class MoveLeaderState : IState
 {
     private List<Vector3> _mainPath = new List<Vector3>();
-    private Transform _transform;
-    private Agent _agent;
     private FSM _fsm;
-    private float _nearDistance;
     private Leader _leader;
-    public MoveLeaderState(Transform transform, float nearDistnace,Leader leader,List<Vector3> mainPath, Agent agent ,FSM fsm)
+    public MoveLeaderState(Leader leader,List<Vector3> mainPath ,FSM fsm)
     {
-        _transform = transform;
-        _nearDistance = nearDistnace;
         _mainPath = mainPath;
-        _agent = agent;
         _leader = leader;
         _fsm = fsm;
     }
@@ -23,23 +17,16 @@ public class MoveLeaderState : IState
     public void OnUpdate()
     {
         if (_leader.DetectEnemy())
+        {
+            _fsm.ChangeState(FSM.State.Attack);
             return;
+        }
         if (_mainPath.Count <= 0)
         {
             _fsm.ChangeState(FSM.State.Idle);
             return;
         }
-        MoveAlongPath();
-    }
-    private void MoveAlongPath()
-    {
-        if (_mainPath.Count == 0) return;
-        var target = _mainPath[0];
-        Vector3 dir = target - _transform.position;
-        _leader.RotateTo(dir);
-        _agent.ApplyArrive(target);
-        if (Vector3.Distance(_transform.position, target) < _nearDistance)
-            _mainPath.RemoveAt(0);
+        _leader.MoveAlongPath();
     }
     public void OnExit()
     {

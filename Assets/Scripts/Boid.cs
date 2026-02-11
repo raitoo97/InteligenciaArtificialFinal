@@ -267,5 +267,4 @@ public class Boid : Agent , IFlockingSeparation
     public Leader Leader { get => _leaderRef; }
     public Life Life { get => _life; }
     public List<Vector3> GetPath { get => _currentPath; }
-    public float ViewRadius { get => _viewRadius; }
 }
