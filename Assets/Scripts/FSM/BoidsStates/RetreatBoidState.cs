@@ -14,8 +14,8 @@ public class RetreatBoidState : IState
     public void OnEnter()
     {
         _boid.ClearPath();
-        _safeSpot = GetSafeSpot();
         _agent.ChangeMove(true);
+        _safeSpot = GetSafeSpot();
         if (_safeSpot != null)
         {
             if (LineOfSight.IsOnSight(_boid.transform.position, _safeSpot.position))
