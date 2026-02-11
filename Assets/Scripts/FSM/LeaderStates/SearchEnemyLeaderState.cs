@@ -27,6 +27,12 @@ public class SearchEnemyLeaderState : IState
     }
     public void OnUpdate()
     {
+        if (_leader.Life.GetLife <= _leader.MinLifeToRetreat)
+        {
+            _leader.ClearPath();
+            _fsm.ChangeState(FSM.State.Retreat);
+            return;
+        }
         if (_target == null)
         {
             _searchTimer -= Time.deltaTime;

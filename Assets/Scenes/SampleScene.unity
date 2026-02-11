@@ -1417,6 +1417,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
         type: 3}
+      propertyPath: _bulletRef
+      value: 
+      objectReference: {fileID: 3271664185656298396, guid: 03bd791c4dd8b9f49b34d6326a24c357,
+        type: 3}
+    - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
+        type: 3}
       propertyPath: _viewAngle
       value: 90
       objectReference: {fileID: 0}
@@ -1430,6 +1436,16 @@ PrefabInstance:
       propertyPath: _isVioletLeader
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
+        type: 3}
+      propertyPath: _blueSecurePlace
+      value: 
+      objectReference: {fileID: 448092306}
+    - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
+        type: 3}
+      propertyPath: _violetSecurePlace
+      value: 
+      objectReference: {fileID: 516389190}
     - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
         type: 3}
       propertyPath: _obstacleAvoidanceWeight
@@ -5627,9 +5643,25 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
         type: 3}
+      propertyPath: _bulletRef
+      value: 
+      objectReference: {fileID: 3271664185656298396, guid: 03bd791c4dd8b9f49b34d6326a24c357,
+        type: 3}
+    - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
+        type: 3}
       propertyPath: _viewRadius
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
+        type: 3}
+      propertyPath: _blueSecurePlace
+      value: 
+      objectReference: {fileID: 448092306}
+    - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
+        type: 3}
+      propertyPath: _violetSecurePlace
+      value: 
+      objectReference: {fileID: 516389190}
     - target: {fileID: 8203259677889813518, guid: 453851fd62050ae408a14a3dd3851830,
         type: 3}
       propertyPath: m_LocalPosition.x
