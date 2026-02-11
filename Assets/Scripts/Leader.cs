@@ -7,7 +7,8 @@ public class Leader : Agent
     [Header("LeaderConfig")]
     [SerializeField]private bool _isVioletLeader;
     [SerializeField]private float _maxLife;
-    [SerializeField] private Slider _slider;
+    [SerializeField]private Slider _slider;
+    [SerializeField]private Transform _gunSight;
     private Life _life;
     [Header("MoveState")]
     [SerializeField][Range(0,3)]private float _nearDistance;
@@ -19,9 +20,10 @@ public class Leader : Agent
     {
         LeaderManager.instance.Register(this);
         _fsm = new FSM();
-        _fsm.AddState(FSM.State.Move, new MoveLeaderState(this.transform, _nearDistance,this,_mainPath,this,_fsm));
+        _fsm.AddState(FSM.State.Move, new MoveLeaderState(this,_mainPath,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleLeaderState(this,_mainPath, this, _fsm));
-        _fsm.AddState(FSM.State.Attack, new AttackLeaderState(this));
+        _fsm.AddState(FSM.State.Attack, new AttackLeaderState(this,this ,_gunSight,_fsm));
+        _fsm.AddState(FSM.State.SearchEnemy, new SearchEnemyLeaderState(this,this,_fsm));
         _life = new Life(this.gameObject,_maxLife, _slider);
     }
     protected override void Start()
@@ -37,6 +39,8 @@ public class Leader : Agent
     }
     private void DestinationSelection()
     {
+        if (_fsm.CurrentState == FSM.State.SearchEnemy) return;
+        if (_fsm.CurrentState == FSM.State.Attack) return;
         var RayCast = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(RayCast, out RaycastHit hitInfo, Mathf.Infinity, LayerMask.GetMask("Floor")))
         {
@@ -70,12 +74,22 @@ public class Leader : Agent
             }
         }
     }
-    private void GoDirectToTarget(Vector3 target)
+    public void MoveAlongPath()
+    {
+        if (_mainPath.Count == 0) return;
+        var target = _mainPath[0];
+        Vector3 dir = target - transform.position;
+        RotateTo(dir);
+        ApplyArrive(target);
+        if (Vector3.Distance(transform.position, target) < _nearDistance)
+            _mainPath.RemoveAt(0);
+    }
+    public void GoDirectToTarget(Vector3 target)
     {
         _mainPath.Clear();
         _mainPath.Add(target);
     }
-    private void CalculatePathToTarget(Vector3 target)
+    public void CalculatePathToTarget(Vector3 target)
     {
         _mainPath.Clear();
         var path = PathFinding.CalculateTheta(this.transform.position, target);
@@ -99,7 +113,6 @@ public class Leader : Agent
         var enemyLeader = LeaderManager.instance.GetLeader(this);
         if (enemyLeader != null && FOV.InFieldOfView(enemyLeader.transform, this.transform, _viewRadius, _viewAngle))
         {
-            _fsm.ChangeState(FSM.State.Attack);
             AlertBoids();
             return true;
         }
@@ -118,12 +131,38 @@ public class Leader : Agent
             var anyBoidInFOV = FOV.InFieldOfView(boid.transform, this.transform, _viewRadius, _viewAngle);
             if (anyBoidInFOV)
             {
-                _fsm.ChangeState(FSM.State.Attack);
                 AlertBoids();
                 return true;
             }
         }
         return false;
+    }
+    public void ClearPath()
+    {
+        _mainPath.Clear();
+    }
+    public Transform GetClosestVisibleEnemy()
+    {
+        var enemyLeader = LeaderManager.instance.GetLeader(this);
+        if (enemyLeader != null && FOV.InFieldOfView(enemyLeader.transform,transform, _viewRadius, _viewAngle))
+            return enemyLeader.transform;
+        var allBoids = BoidManager.instance.GetBoids;
+        List<Boid> enemyBoids = allBoids.FindAll(b => b != null && b.typeBoid != (_isVioletLeader ? TypeBoid.VioletTeam : TypeBoid.BlueTeam));
+        Transform closest = null;
+        float closestDist = Mathf.Infinity;
+        foreach (var boid in enemyBoids)
+        {
+            if (FOV.InFieldOfView(boid.transform, transform, _viewRadius, _viewAngle))
+            {
+                float dist = Vector3.Distance(this.transform.position, boid.transform.position);
+                if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closest = boid.transform;
+                }
+            }
+        }
+        return closest;
     }
     private void AlertBoids()
     {
@@ -154,10 +193,12 @@ public class Leader : Agent
         _fsm.RemoveState(FSM.State.Idle);
         _fsm.RemoveState(FSM.State.Move);
         _fsm.RemoveState(FSM.State.Attack);
+        _fsm.RemoveState(FSM.State.SearchEnemy);
         LeaderManager.instance.Remove(this);
         _fsm = null;
         _life = null;
     }
     public bool IsVioletLeader { get => _isVioletLeader; }
     public Life Life { get => _life; }
+    public List<Vector3> MainPath { get => _mainPath; }
 }

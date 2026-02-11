@@ -149,7 +149,33 @@ public class Boid : Agent , IFlockingSeparation
                 boid.ForceAttack();
             }
         }
-        _leaderRef.ForceAttack();
+        if (_leaderRef != null)
+        {
+            _leaderRef.ForceAttack();
+        }
+    }
+    public Transform GetClosestVisibleEnemy()
+    {
+        var enemyLeader = LeaderManager.instance.GetLeader(_leaderRef);
+        if (enemyLeader != null && FOV.InFieldOfView(enemyLeader.transform, this.transform, _viewRadius, _viewAngle))
+            return enemyLeader.transform;
+        var allBoids = BoidManager.instance.GetBoids;
+        List<Boid> enemyBoids = allBoids.FindAll(b => b != null && b.typeBoid != this.typeBoid);
+        Transform closest = null;
+        float closestDist = Mathf.Infinity;
+        foreach (var boid in enemyBoids)
+        {
+            if (FOV.InFieldOfView(boid.transform, this.transform, _viewRadius, _viewAngle))
+            {
+                float dist = Vector3.Distance(this.transform.position, boid.transform.position);
+                if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closest = boid.transform;
+                }
+            }
+        }
+        return closest;
     }
     public void CheckHasNeighbors(ref bool _hasNeighbors)
     {
@@ -241,5 +267,4 @@ public class Boid : Agent , IFlockingSeparation
     public Leader Leader { get => _leaderRef; }
     public Life Life { get => _life; }
     public List<Vector3> GetPath { get => _currentPath; }
-    public float ViewRadius { get => _viewRadius; }
 }

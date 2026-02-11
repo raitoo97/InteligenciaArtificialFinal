@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
-public class SearchEnemyBoidState : IState
+public class SearchEnemyLeaderState : IState
 {
-    private Boid _boid;
+    private Leader _leader;
     private Agent _agent;
     private FSM _fsm;
     private Transform _target;
     private float _searchTimer;
     private float _searchInterval = 0.5f;
-    public SearchEnemyBoidState(Boid boid, Agent agent, FSM fsm)
+    public SearchEnemyLeaderState(Leader leader, Agent agent, FSM fsm)
     {
-        _boid = boid;
+        _leader = leader;
         _agent = agent;
         _fsm = fsm;
     }
@@ -18,12 +18,12 @@ public class SearchEnemyBoidState : IState
     {
         _target = ChooseRandomEnemy();
         _searchTimer = _searchInterval;
-        _boid.ClearPath();
+        _leader.ClearPath();
         _agent.ChangeMove(true);
     }
     public void OnExit()
     {
-        _boid.ClearPath();
+        _leader.ClearPath();
     }
     public void OnUpdate()
     {
@@ -37,25 +37,25 @@ public class SearchEnemyBoidState : IState
             }
             return;
         }
-        var visibleEnemy = _boid.GetClosestVisibleEnemy();
+        var visibleEnemy = _leader.GetClosestVisibleEnemy();
         if (visibleEnemy != null)
         {
-            _boid.ClearPath();
+            _leader.ClearPath();
             _fsm.ChangeState(FSM.State.Attack);
             return;
         }
-        if (_boid.GetPath.Count > 0)
+        if (_leader.MainPath.Count > 0)
         {
-            _boid.MoveAlongPath();
+            _leader.MoveAlongPath();
             return;
         }
         if (_target != null)
         {
-            var isOnSight = LineOfSight.IsOnSight(_boid.transform.position, _target.position);
-            if(isOnSight)
-                _boid.GoDirectToTarget(_target.position);
+            var isOnSight = LineOfSight.IsOnSight(_leader.transform.position, _target.position);
+            if (isOnSight)
+                _leader.GoDirectToTarget(_target.position);
             else
-                _boid.CalculatePathToTarget(_target.position);
+                _leader.CalculatePathToTarget(_target.position);
         }
     }
     private Transform ChooseRandomEnemy()
@@ -64,7 +64,7 @@ public class SearchEnemyBoidState : IState
         foreach (var boid in BoidManager.instance.GetBoids)
         {
             if (boid == null) continue;
-            if (boid.typeBoid != _boid.typeBoid)
+            if (boid.typeBoid !=(_leader.IsVioletLeader ? TypeBoid.VioletTeam : TypeBoid.BlueTeam))
                 enemies.Add(boid);
         }
         if (enemies.Count > 0)
@@ -72,7 +72,7 @@ public class SearchEnemyBoidState : IState
             int index = Random.Range(0, enemies.Count);
             return enemies[index].transform;
         }
-        var enemyLeader = LeaderManager.instance.GetLeader(_boid.Leader);
+        var enemyLeader = LeaderManager.instance.GetLeader(_leader);
         if (enemyLeader != null)
             return enemyLeader.transform;
         return null;

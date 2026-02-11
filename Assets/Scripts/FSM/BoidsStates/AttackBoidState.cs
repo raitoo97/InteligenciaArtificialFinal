@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 public class AttackBoidState : IState
 {
@@ -23,8 +22,9 @@ public class AttackBoidState : IState
     }
     public void OnEnter()
     {
-        _target = FindTarget();
+        _target = _boid.GetClosestVisibleEnemy();
         _maxCooldown = 3;
+        _currentCooldown = Time.time;
         _isStopped = false;
         _boid.ClearPath();
         _agent.ChangeMove(true);
@@ -38,25 +38,10 @@ public class AttackBoidState : IState
     {
         if (_target == null)
         {
-            _target = FindTarget(); 
-            if (_target == null)
-            {
-                _fsm.ChangeState(FSM.State.SearchEnemy);
-                return;
-            }
+            _fsm.ChangeState(FSM.State.SearchEnemy);
+            return;
         }
         Vector3 dir = _target.position - _boid.transform.position;
-        if (_boid.GetPath.Count > 0)
-        {
-            _boid.MoveAlongPath();
-            return;
-        }
-        bool hasLOS = LineOfSight.IsOnSight(_boid.transform.position,_target.position);
-        if (!hasLOS)
-        {
-            _boid.CalculatePathToTarget(_target.position);
-            return;
-        }
         _leaderTooClose = _boid.HasLeaderTooClose();
         _boid.CheckHasNeighbors(ref _hasNeighbors);
         _boid.CheckHasEnemyNeighbors(ref _hasEnemyNearby, _shootRange);
@@ -87,36 +72,7 @@ public class AttackBoidState : IState
         }
         if (dir.sqrMagnitude > 0.001f)
             _boid.RotateTo(dir);
-        if (hasLOS)
-            TryShoot();
-    }
-    private Transform FindTarget()
-    {
-        float chance = Random.value;
-        if(chance < 0.5f)
-        {
-            var enemyLeader = LeaderManager.instance.GetLeader(_boid.Leader);
-            if (enemyLeader != null)
-            {
-                if(LineOfSight.IsOnSight(_boid.transform.position, enemyLeader.transform.position))
-                    return enemyLeader.transform;
-            }
-        }
-        var allBoids = BoidManager.instance.GetBoids;
-        List<Boid> visibleEnemies = new List<Boid>();
-        foreach (var boid in allBoids)
-        {
-            if (boid == null) continue;
-            if (!LineOfSight.IsOnSight(_boid.transform.position, boid.transform.position)) continue;
-            if (boid.typeBoid == _boid.typeBoid) continue;
-            visibleEnemies.Add(boid);
-        }
-        if (visibleEnemies.Count > 0)
-        {
-            int index = Random.Range(0, visibleEnemies.Count);
-            return visibleEnemies[index].transform;
-        }
-        return null;
+        TryShoot();
     }
     private void TryShoot()
     {
