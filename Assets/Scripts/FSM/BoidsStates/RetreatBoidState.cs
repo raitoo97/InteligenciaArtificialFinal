@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RetreatBoidState : IState
 {
+    private Transform[] _securePlaces;
     public void OnEnter()
     {
         throw new System.NotImplementedException();
