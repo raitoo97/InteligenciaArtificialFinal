@@ -274,4 +274,6 @@ public class Boid : Agent , IFlockingSeparation
     public Life Life { get => _life; }
     public List<Vector3> GetPath { get => _currentPath; }
     public float MinLifeToRetreat { get => _minLifeToRetreat; }
+    public float ViewRadius { get => _viewRadius; }
+    public float ViewAngle { get => _viewAngle; }
 }

@@ -1,19 +1,31 @@
 using UnityEngine;
+public enum HealingZoneTeam
+{
+    Blue,
+    Violet
+}
 public class HealingZone : MonoBehaviour
 {
+    [SerializeField] private HealingZoneTeam zoneType;
+    [SerializeField] private float healAmount = 60f;
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == 9)
         {
             var boid = other.GetComponent<Boid>();
             if (boid == null) return;
-            boid.Life.Heal(60);
+            if (IsCorrectTeam(boid.typeBoid))
+            {
+                boid.Life.Heal(healAmount);
+            }
         }
-        if (other.gameObject.layer == 10)
-        {
-            var leader = other.GetComponent<Leader>();
-            if (leader == null) return;
-            leader.Life.Heal(60);
-        }
+    }
+    private bool IsCorrectTeam(TypeBoid boidType)
+    {
+        if (zoneType == HealingZoneTeam.Blue && boidType == TypeBoid.BlueTeam)
+            return true;
+        if (zoneType == HealingZoneTeam.Violet && boidType == TypeBoid.VioletTeam)
+            return true;
+        return false;
     }
 }

@@ -27,7 +27,7 @@ public class AttackBoidState : IState
     public void OnEnter()
     {
         _target = _boid.GetClosestVisibleEnemy();
-        _maxCooldown = 3;
+        _maxCooldown = 1;
         _currentCooldown = Time.time;
         _isStopped = false;
         _boid.ClearPath();
@@ -47,6 +47,12 @@ public class AttackBoidState : IState
             return;
         }
         if (_target == null)
+        {
+            _fsm.ChangeState(FSM.State.SearchEnemy);
+            return;
+        }
+        bool visible = FOV.InFieldOfView(_target, _boid.transform, _boid.ViewRadius, _boid.ViewAngle);
+        if (!visible)
         {
             _fsm.ChangeState(FSM.State.SearchEnemy);
             return;
