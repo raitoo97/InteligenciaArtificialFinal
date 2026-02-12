@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public static class NodeManager
 {
     private static List<Node> _totalNodes = new List<Node>();
