@@ -85,7 +85,10 @@ public class AttackBoidState : IState
             _agent.ChangeMove(true);
             _isStopped = false;
         }
-        RotateWhitPrediction(_target.GetComponent<Agent>());
+        if (_target.TryGetComponent<Agent>(out Agent targetAgent))
+        {
+            RotateWhitPrediction(targetAgent);
+        }
         TryShoot();
     }
     private void TryShoot()

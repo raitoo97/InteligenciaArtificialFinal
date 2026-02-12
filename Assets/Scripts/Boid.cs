@@ -87,7 +87,7 @@ public class Boid : Agent , IFlockingSeparation
     }
     public void ApplyEnemySeparation(float range)
     {
-        var enemies = BoidManager.instance.GetBoids.FindAll(b => b.typeBoid != typeBoid);
+        var enemies = BoidManager.instance.GetBoids.FindAll(b => b != null && b.typeBoid != typeBoid);
         AddForce(Separation(enemies, range) * enemySeparationWeight);
     }
     public void RotateTo(Vector3 dir)
@@ -203,8 +203,8 @@ public class Boid : Agent , IFlockingSeparation
         var allBoids = BoidManager.instance.GetBoids;
         foreach (var boid in allBoids)
         {
-            if (boid.typeBoid == this.typeBoid)continue;
             if (boid == null) continue;
+            if (boid.typeBoid == this.typeBoid)continue;
             float dist = Vector3.Distance(this.transform.position, boid.transform.position);
             if (dist < range)
             {
