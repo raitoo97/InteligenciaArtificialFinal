@@ -22,7 +22,7 @@ public class AttackLeaderState : IState
     public void OnEnter()
     {
         _target = _leader.GetClosestVisibleEnemy();
-        _maxCooldown = 3;
+        _maxCooldown = 0.5f;
         _currentCooldown = Time.time;
     }
     public void OnExit()
