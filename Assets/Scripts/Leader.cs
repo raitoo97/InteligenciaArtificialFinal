@@ -86,7 +86,7 @@ public class Leader : Agent
         Vector3 dir = target - transform.position;
         RotateTo(dir);
         ApplyArrive(target);
-        if (Vector3.Distance(transform.position, target) < _nearDistance)
+        if (Vector3.Distance(transform.position, target) <= _nearDistance)
             _mainPath.RemoveAt(0);
     }
     public void GoDirectToTarget(Vector3 target)

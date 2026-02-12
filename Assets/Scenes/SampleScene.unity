@@ -1433,6 +1433,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
         type: 3}
+      propertyPath: _nearDistance
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
+        type: 3}
       propertyPath: _isVioletLeader
       value: 1
       objectReference: {fileID: 0}
@@ -5651,6 +5656,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _viewRadius
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
+        type: 3}
+      propertyPath: _nearDistance
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4302319468824667303, guid: 453851fd62050ae408a14a3dd3851830,
         type: 3}
