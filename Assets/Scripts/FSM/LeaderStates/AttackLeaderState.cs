@@ -24,7 +24,6 @@ public class AttackLeaderState : IState
         _target = _leader.GetClosestVisibleEnemy();
         _maxCooldown = 3;
         _currentCooldown = Time.time;
-
     }
     public void OnExit()
     {
