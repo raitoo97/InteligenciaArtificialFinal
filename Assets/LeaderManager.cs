@@ -29,4 +29,5 @@ public class LeaderManager : MonoBehaviour
         else
             return _leaders.Find(l => l != null && l.IsVioletLeader);
     }
+    public List<Leader> Leaders { get => _leaders; }
 }
