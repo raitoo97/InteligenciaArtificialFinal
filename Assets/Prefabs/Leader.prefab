@@ -647,7 +647,11 @@ MonoBehaviour:
   _maxLife: 100
   _slider: {fileID: 2696242135880295471}
   _gunSight: {fileID: 8204835755656157039}
-  _nearDistance: 1.5
+  _bulletRef: {fileID: 0}
+  _blueSecurePlace: {fileID: 0}
+  _violetSecurePlace: {fileID: 0}
+  _minLifeToRetreat: 20
+  _nearDistance: 1.6
   _viewRadius: 6
   _viewAngle: 90
 --- !u!114 &7702221805020330777

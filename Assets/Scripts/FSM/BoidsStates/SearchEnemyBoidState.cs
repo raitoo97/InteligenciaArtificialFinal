@@ -8,6 +8,8 @@ public class SearchEnemyBoidState : IState
     private Transform _target;
     private float _searchTimer;
     private float _searchInterval = 0.5f;
+    private Vector3 _lastKnowPosition;
+    private float _distanceTreshold = 5f;
     public SearchEnemyBoidState(Boid boid, Agent agent, FSM fsm)
     {
         _boid = boid;
@@ -20,6 +22,8 @@ public class SearchEnemyBoidState : IState
         _searchTimer = _searchInterval;
         _boid.ClearPath();
         _agent.ChangeMove(true);
+        if (_target != null)
+            _lastKnowPosition = _target.position;
     }
     public void OnExit()
     {
@@ -27,6 +31,12 @@ public class SearchEnemyBoidState : IState
     }
     public void OnUpdate()
     {
+        if(_boid.Life.GetLife <= _boid.MinLifeToRetreat)
+        {
+            _boid.ClearPath();
+            _fsm.ChangeState(FSM.State.Retreat);
+            return;
+        }
         if (_target == null)
         {
             _searchTimer -= Time.deltaTime;
@@ -44,18 +54,22 @@ public class SearchEnemyBoidState : IState
             _fsm.ChangeState(FSM.State.Attack);
             return;
         }
+        if (_target != null)
+        {
+            float distance = Vector3.Distance(_target.position, _lastKnowPosition);
+            if (_boid.GetPath.Count == 0 || distance > _distanceTreshold)
+            {
+                var isOnSight = LineOfSight.IsOnSight(_boid.transform.position, _target.position);
+                if (isOnSight)
+                    _boid.GoDirectToTarget(_target.position);
+                else
+                    _boid.CalculatePathToTarget(_target.position);
+                _lastKnowPosition = _target.position;
+            }
+        }
         if (_boid.GetPath.Count > 0)
         {
             _boid.MoveAlongPath();
-            return;
-        }
-        if (_target != null)
-        {
-            var isOnSight = LineOfSight.IsOnSight(_boid.transform.position, _target.position);
-            if(isOnSight)
-                _boid.GoDirectToTarget(_target.position);
-            else
-                _boid.CalculatePathToTarget(_target.position);
         }
     }
     private Transform ChooseRandomEnemy()

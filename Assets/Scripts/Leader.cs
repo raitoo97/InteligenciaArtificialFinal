@@ -9,6 +9,10 @@ public class Leader : Agent
     [SerializeField]private float _maxLife;
     [SerializeField]private Slider _slider;
     [SerializeField]private Transform _gunSight;
+    [SerializeField] private GameObject _bulletRef;
+    public Transform _blueSecurePlace;
+    public Transform _violetSecurePlace;
+    [SerializeField]private float _minLifeToRetreat;
     private Life _life;
     [Header("MoveState")]
     [SerializeField][Range(0,3)]private float _nearDistance;
@@ -22,8 +26,9 @@ public class Leader : Agent
         _fsm = new FSM();
         _fsm.AddState(FSM.State.Move, new MoveLeaderState(this,_mainPath,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleLeaderState(this,_mainPath, this, _fsm));
-        _fsm.AddState(FSM.State.Attack, new AttackLeaderState(this,this ,_gunSight,_fsm));
+        _fsm.AddState(FSM.State.Attack, new AttackLeaderState(_bulletRef, _gunSight, this,this ,_fsm));
         _fsm.AddState(FSM.State.SearchEnemy, new SearchEnemyLeaderState(this,this,_fsm));
+        _fsm.AddState(FSM.State.Retreat, new RetreatLeaderState(this, this, _fsm));
         _life = new Life(this.gameObject,_maxLife, _slider);
     }
     protected override void Start()
@@ -81,7 +86,7 @@ public class Leader : Agent
         Vector3 dir = target - transform.position;
         RotateTo(dir);
         ApplyArrive(target);
-        if (Vector3.Distance(transform.position, target) < _nearDistance)
+        if (Vector3.Distance(transform.position, target) <= _nearDistance)
             _mainPath.RemoveAt(0);
     }
     public void GoDirectToTarget(Vector3 target)
@@ -194,6 +199,7 @@ public class Leader : Agent
         _fsm.RemoveState(FSM.State.Move);
         _fsm.RemoveState(FSM.State.Attack);
         _fsm.RemoveState(FSM.State.SearchEnemy);
+        _fsm.RemoveState(FSM.State.Retreat);
         LeaderManager.instance.Remove(this);
         _fsm = null;
         _life = null;
@@ -201,4 +207,7 @@ public class Leader : Agent
     public bool IsVioletLeader { get => _isVioletLeader; }
     public Life Life { get => _life; }
     public List<Vector3> MainPath { get => _mainPath; }
+    public float ViewRadius { get => _viewRadius; }
+    public float ViewAngle { get => _viewAngle; }
+    public float MinLifeToRetreat { get => _minLifeToRetreat; }
 }

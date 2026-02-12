@@ -8,6 +8,8 @@ public class SearchEnemyLeaderState : IState
     private Transform _target;
     private float _searchTimer;
     private float _searchInterval = 0.5f;
+    private Vector3 _lastKnowPosition;
+    private float _distanceTreshold = 5f;
     public SearchEnemyLeaderState(Leader leader, Agent agent, FSM fsm)
     {
         _leader = leader;
@@ -20,6 +22,8 @@ public class SearchEnemyLeaderState : IState
         _searchTimer = _searchInterval;
         _leader.ClearPath();
         _agent.ChangeMove(true);
+        if (_target != null)
+            _lastKnowPosition = _target.position;
     }
     public void OnExit()
     {
@@ -27,6 +31,12 @@ public class SearchEnemyLeaderState : IState
     }
     public void OnUpdate()
     {
+        if (_leader.Life.GetLife <= _leader.MinLifeToRetreat)
+        {
+            _leader.ClearPath();
+            _fsm.ChangeState(FSM.State.Retreat);
+            return;
+        }
         if (_target == null)
         {
             _searchTimer -= Time.deltaTime;
@@ -44,18 +54,22 @@ public class SearchEnemyLeaderState : IState
             _fsm.ChangeState(FSM.State.Attack);
             return;
         }
+        if (_target != null)
+        {
+            float distance = Vector3.Distance(_target.position, _lastKnowPosition);
+            if (_leader.MainPath.Count == 0 || distance > _distanceTreshold)
+            {
+                var isOnSight = LineOfSight.IsOnSight(_leader.transform.position, _target.position);
+                if (isOnSight)
+                    _leader.GoDirectToTarget(_target.position);
+                else
+                    _leader.CalculatePathToTarget(_target.position);
+                _lastKnowPosition = _target.position;
+            }
+        }
         if (_leader.MainPath.Count > 0)
         {
             _leader.MoveAlongPath();
-            return;
-        }
-        if (_target != null)
-        {
-            var isOnSight = LineOfSight.IsOnSight(_leader.transform.position, _target.position);
-            if (isOnSight)
-                _leader.GoDirectToTarget(_target.position);
-            else
-                _leader.CalculatePathToTarget(_target.position);
         }
     }
     private Transform ChooseRandomEnemy()

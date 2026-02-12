@@ -14,6 +14,7 @@ public class Boid : Agent , IFlockingSeparation
     private List<Vector3> _currentPath = new List<Vector3>();
     public TypeBoid typeBoid;
     [SerializeField]private Transform _gunSight;
+    [SerializeField]private GameObject _bulletRef;
     [SerializeField]private Slider _slider;
     public float weightSeparation;
     public float leaderSeparationWeight;
@@ -23,6 +24,9 @@ public class Boid : Agent , IFlockingSeparation
     [Range(0f, 4f)] public  float _distanceToLeader;
     [SerializeField] private float _maxLife;
     private Life _life;
+    public Transform _blueSecurePlace;
+    public Transform _violetSecurePlace;
+    [SerializeField]private float _minLifeToRetreat;
     [Header("FOV")]
     [SerializeField] private float _viewRadius;
     [SerializeField] private float _viewAngle;
@@ -32,8 +36,9 @@ public class Boid : Agent , IFlockingSeparation
         _fsm = new FSM();
         _fsm.AddState(FSM.State.Move, new MoveBoidState(this,_leaderRef,_fsm));
         _fsm.AddState(FSM.State.Idle, new IdleBoidState(this,_leaderRef,this,_fsm));
-        _fsm.AddState(FSM.State.Attack, new AttackBoidState(_gunSight, this,this,_fsm));
+        _fsm.AddState(FSM.State.Attack, new AttackBoidState(_gunSight, _bulletRef, this,this,_fsm));
         _fsm.AddState(FSM.State.SearchEnemy, new SearchEnemyBoidState(this,this,_fsm));
+        _fsm.AddState(FSM.State.Retreat, new RetreatBoidState(this,this,_fsm));
         _life = new Life(this.gameObject,_maxLife, _slider);
     }
     protected override void Start()
@@ -82,7 +87,7 @@ public class Boid : Agent , IFlockingSeparation
     }
     public void ApplyEnemySeparation(float range)
     {
-        var enemies = BoidManager.instance.GetBoids.FindAll(b => b.typeBoid != typeBoid);
+        var enemies = BoidManager.instance.GetBoids.FindAll(b => b != null && b.typeBoid != typeBoid);
         AddForce(Separation(enemies, range) * enemySeparationWeight);
     }
     public void RotateTo(Vector3 dir)
@@ -198,8 +203,8 @@ public class Boid : Agent , IFlockingSeparation
         var allBoids = BoidManager.instance.GetBoids;
         foreach (var boid in allBoids)
         {
-            if (boid.typeBoid == this.typeBoid)continue;
             if (boid == null) continue;
+            if (boid.typeBoid == this.typeBoid)continue;
             float dist = Vector3.Distance(this.transform.position, boid.transform.position);
             if (dist < range)
             {
@@ -259,6 +264,7 @@ public class Boid : Agent , IFlockingSeparation
         _fsm.RemoveState(FSM.State.Move);
         _fsm.RemoveState(FSM.State.Attack);
         _fsm.RemoveState(FSM.State.SearchEnemy);
+        _fsm.RemoveState(FSM.State.Retreat);
         BoidManager.instance.RemoveBoid(this);
         GameManager.instance.UpdateAllNeighbors();
         _fsm = null;
@@ -267,4 +273,7 @@ public class Boid : Agent , IFlockingSeparation
     public Leader Leader { get => _leaderRef; }
     public Life Life { get => _life; }
     public List<Vector3> GetPath { get => _currentPath; }
+    public float MinLifeToRetreat { get => _minLifeToRetreat; }
+    public float ViewRadius { get => _viewRadius; }
+    public float ViewAngle { get => _viewAngle; }
 }

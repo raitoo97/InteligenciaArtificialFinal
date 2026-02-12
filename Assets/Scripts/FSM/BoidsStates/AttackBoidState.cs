@@ -13,17 +13,21 @@ public class AttackBoidState : IState
     private bool _leaderTooClose;
     private bool _hasEnemyNearby;
     private bool _isStopped;
-    public AttackBoidState(Transform gunSight,Boid boid,Agent agent,FSM fsm)
+    private GameObject _bullet;
+    private float _bulletSpeed;
+    public AttackBoidState(Transform gunSight,GameObject bullet,Boid boid,Agent agent,FSM fsm)
     {
         _agent = agent;
         _boid = boid;
         _fsm = fsm;
         _gunSight = gunSight;
+        _bullet = bullet;
+        _bulletSpeed = _bullet.GetComponent<Bullet>().GetSpeed;
     }
     public void OnEnter()
     {
         _target = _boid.GetClosestVisibleEnemy();
-        _maxCooldown = 3;
+        _maxCooldown = 1;
         _currentCooldown = Time.time;
         _isStopped = false;
         _boid.ClearPath();
@@ -36,12 +40,23 @@ public class AttackBoidState : IState
     }
     public void OnUpdate()
     {
+        if (_boid.Life.GetLife <= _boid.MinLifeToRetreat)
+        {
+            _boid.ClearPath();
+            _fsm.ChangeState(FSM.State.Retreat);
+            return;
+        }
         if (_target == null)
         {
             _fsm.ChangeState(FSM.State.SearchEnemy);
             return;
         }
-        Vector3 dir = _target.position - _boid.transform.position;
+        bool visible = FOV.InFieldOfView(_target, _boid.transform, _boid.ViewRadius, _boid.ViewAngle);
+        if (!visible)
+        {
+            _fsm.ChangeState(FSM.State.SearchEnemy);
+            return;
+        }
         _leaderTooClose = _boid.HasLeaderTooClose();
         _boid.CheckHasNeighbors(ref _hasNeighbors);
         _boid.CheckHasEnemyNeighbors(ref _hasEnemyNearby, _shootRange);
@@ -70,8 +85,10 @@ public class AttackBoidState : IState
             _agent.ChangeMove(true);
             _isStopped = false;
         }
-        if (dir.sqrMagnitude > 0.001f)
-            _boid.RotateTo(dir);
+        if (_target.TryGetComponent<Agent>(out Agent targetAgent))
+        {
+            RotateWhitPrediction(targetAgent);
+        }
         TryShoot();
     }
     private void TryShoot()
@@ -83,5 +100,18 @@ public class AttackBoidState : IState
         bullet.transform.rotation = _gunSight.rotation;
         bullet.GetComponent<Bullet>().Shoot(_boid.typeBoid);
         _currentCooldown = Time.time;
+    }
+    public void RotateWhitPrediction(Agent Target)
+    {
+        Vector3 dir = Target.transform.position - _boid.transform.position;
+        float distance = dir.magnitude;
+        float predictionTime = distance / _bulletSpeed;
+        Vector3 aim = Target.transform.position + Target.Velocity * predictionTime;
+        Vector3 directionToAim = (aim - _boid.transform.position).normalized;
+        if (directionToAim != Vector3.zero)
+        {
+            Quaternion desiredRot = Quaternion.LookRotation(directionToAim);
+            _boid.transform.rotation = Quaternion.RotateTowards(_boid.transform.rotation, desiredRot, 360f * Time.deltaTime);
+        }
     }
 }

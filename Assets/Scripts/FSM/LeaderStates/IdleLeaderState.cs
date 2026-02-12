@@ -23,6 +23,12 @@ public class IdleLeaderState : IState
     }
     public void OnUpdate()
     {
+        if (_leader.Life.GetLife <= _leader.MinLifeToRetreat)
+        {
+            _leader.ClearPath();
+            _fsm.ChangeState(FSM.State.Retreat);
+            return;
+        }
         if (_leader.DetectEnemy())
         {
             _fsm.ChangeState(FSM.State.Attack);

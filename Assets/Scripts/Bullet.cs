@@ -42,6 +42,11 @@ public class Bullet : MonoBehaviour
                 DesactivateBullet();
             }
         }
+        if(other.gameObject.layer == 7)//Wall
+        {
+            CancelInvoke("DesactivateBullet");
+            DesactivateBullet();
+        }
     }
     void Update()
     {
@@ -51,4 +56,5 @@ public class Bullet : MonoBehaviour
     {
         this.gameObject.SetActive(false);
     }
+    public float GetSpeed { get => speed; }
 }

@@ -6,7 +6,8 @@ public class FSM
         Idle,
         Move,
         Attack,
-        SearchEnemy
+        SearchEnemy,
+        Retreat
     }
     Dictionary<State,IState> _allStates = new Dictionary<State, IState>();
     private IState _currentState;
