@@ -50,7 +50,10 @@ public class AttackLeaderState : IState
             return;
         }
         _agent.ChangeMove(false);
-        RotateWhitPrediction(_target.GetComponent<Agent>());
+        if(_target.TryGetComponent<Agent>(out var targetAgent))
+        {
+            RotateWhitPrediction(targetAgent);
+        }
         TryShoot();
     }
     private void TryShoot()
